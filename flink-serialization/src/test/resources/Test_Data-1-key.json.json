@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Test Data Key",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "vin": {
+      "propertyOrder": 3,
+      "type": "string",
+      "minLength": 1,
+      "title": "Vin"
+    },
+    "series": {
+      "propertyOrder": 5,
+      "type": "string",
+      "minLength": 1,
+      "title": "Series"
+    },
+    "modelCode": {
+      "propertyOrder": 6,
+      "type": "string",
+      "minLength": 1,
+      "title": "Model Code"
+    }
+  },
+  "required": [
+    "vin",
+    "series",
+    "modelCode"
+  ]
+}

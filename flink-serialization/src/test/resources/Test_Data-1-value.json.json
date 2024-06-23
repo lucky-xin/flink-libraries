@@ -1,0 +1,491 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Test Data",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "offset": {
+      "connect.index": 2,
+      "type": "integer",
+      "title": "Offset"
+    },
+    "vin": {
+      "connect.index": 3,
+      "type": "string",
+      "minLength": 1,
+      "title": "Vin"
+    },
+    "partition": {
+      "connect.index": 1,
+      "type": "integer",
+      "title": "Partition"
+    },
+    "sampleTime": {
+      "connect.index": 4,
+      "type": "integer",
+      "title": "Sample Time"
+    },
+    "series": {
+      "connect.index": 5,
+      "type": "string",
+      "minLength": 1,
+      "title": "Series"
+    },
+    "modelCode": {
+      "connect.index": 6,
+      "type": "string",
+      "pattern": "^(MA|MB|M1|MU).*",
+      "minLength": 1,
+      "title": "Model Code",
+      "connect.parameters": {
+        "arg.properties": "{\"regex\":\"(MA|MU)[\\\\s\\\\S]+\"}"
+      }
+    },
+    "type": {
+      "connect.index": 7,
+      "type": "string",
+      "pattern": "^(tbox_period|tbox_period1)$",
+      "minLength": 1,
+      "title": "Type"
+    },
+    "content": {
+      "connect.index": 8,
+      "$ref": "#/definitions/org.apache.flink.streaming.test.examples.entity.bo.TestData$DataContent",
+      "title": "Content"
+    }
+  },
+  "required": [
+    "partition",
+    "offset",
+    "vin",
+    "sampleTime",
+    "series",
+    "modelCode",
+    "type",
+    "content"
+  ],
+  "definitions": {
+    "org.apache.flink.streaming.test.examples.entity.bo.TestData$DataContent": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "KeySt": {
+          "connect.index": 1,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "Key St"
+        },
+        "LatestLockUnlockCmd": {
+          "connect.index": 2,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "Latest Lock Unlock Cmd"
+        },
+        "Reissue": {
+          "connect.index": 3,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "Reissue"
+        },
+        "BattCurrent": {
+          "connect.index": 4,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Batt Current"
+        },
+        "HazardLampSt": {
+          "connect.index": 5,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "Hazard Lamp St"
+        },
+        "HighBeamCmd": {
+          "connect.index": 6,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "High Beam Cmd"
+        },
+        "LowBeamCmd": {
+          "connect.index": 7,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "Low Beam Cmd"
+        },
+        "FrontFogLampSt": {
+          "connect.index": 8,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "Front Fog Lamp St"
+        },
+        "RearFogLampSt": {
+          "connect.index": 9,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "Rear Fog Lamp St"
+        },
+        "DriverDoorAjarSt": {
+          "connect.index": 10,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "Driver Door Ajar St"
+        },
+        "PsngrDoorAjarSt": {
+          "connect.index": 11,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "Psngr Door Ajar St"
+        },
+        "RLDoorAjarSt": {
+          "connect.index": 12,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "RL Door Ajar St"
+        },
+        "RRDoorAjarSt": {
+          "connect.index": 13,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "RR Door Ajar St"
+        },
+        "TrunkAjarSt": {
+          "connect.index": 14,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "Trunk Ajar St"
+        },
+        "BonnetAjarSt": {
+          "connect.index": 15,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "Bonnet Ajar St"
+        },
+        "WINDEXITSPD": {
+          "connect.index": 16,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "WINDEXITSPD"
+        },
+        "SOC": {
+          "connect.index": 17,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "SOC"
+        },
+        "SOC_STATE": {
+          "connect.index": 18,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "SOC _ STATE"
+        },
+        "BattVolt": {
+          "connect.index": 19,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Batt Volt"
+        },
+        "CurrentRange": {
+          "connect.index": 20,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "Current Range"
+        },
+        "FLHVSMAutoModeSt": {
+          "connect.index": 21,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "FLHVSM Auto Mode St"
+        },
+        "FRHVSMAutoModeSt": {
+          "connect.index": 22,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "FRHVSM Auto Mode St"
+        },
+        "MCMRL_MasSt": {
+          "connect.index": 23,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "MCMRL _ Mas St"
+        },
+        "MCMRR_MasSt": {
+          "connect.index": 24,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "MCMRR _ Mas St"
+        },
+        "MCMFL_MasSt": {
+          "connect.index": 25,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "MCMFL _ Mas St"
+        },
+        "MCMFR_MasSt": {
+          "connect.index": 26,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "MCMFR _ Mas St"
+        },
+        "FLHeatingActLevel": {
+          "connect.index": 27,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "FL Heating Act Level"
+        },
+        "FLVentilatingActLevel": {
+          "connect.index": 28,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "FL Ventilating Act Level"
+        },
+        "FRVentilatingActLevel": {
+          "connect.index": 29,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "FR Ventilating Act Level"
+        },
+        "FRHeatingActLevel": {
+          "connect.index": 30,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "FR Heating Act Level"
+        },
+        "DriverDoorLockSt": {
+          "connect.index": 31,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "Driver Door Lock St"
+        },
+        "PsngrDoorLockSt": {
+          "connect.index": 32,
+          "oneOf": [
+            {
+              "type": "null",
+              "title": "Not included"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "Psngr Door Lock St"
+        }
+      }
+    }
+  }
+}

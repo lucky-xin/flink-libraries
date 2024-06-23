@@ -1,0 +1,64 @@
+{
+  "name": "end",
+  "quantifier": {
+    "consumingStrategy": "SKIP_TILL_NEXT",
+    "properties": [
+      "SINGLE"
+    ],
+    "times": null,
+    "untilCondition": null
+  },
+  "condition": null,
+  "nodes": [
+    {
+      "name": "end",
+      "quantifier": {
+        "consumingStrategy": "SKIP_TILL_NEXT",
+        "properties": [
+          "SINGLE"
+        ],
+        "times": null,
+        "untilCondition": null
+      },
+      "condition": {
+        "className": "org.apache.flink.table.examples.condition.EndCondition",
+        "type": "CLASS"
+      },
+      "type": "ATOMIC"
+    },
+    {
+      "name": "start",
+      "quantifier": {
+        "consumingStrategy": "SKIP_TILL_NEXT",
+        "properties": [
+          "LOOPING"
+        ],
+        "times": {
+          "from": 3,
+          "to": 3,
+          "windowSize": "PT24H"
+        },
+        "untilCondition": null
+      },
+      "condition": {
+        "expression": "(jump & 4539628424389459968) != 0L || (jump & 36028797018963968) != 0L || (jump & 2249600790429696) != 0L || (jump & 274877906944) != 0L",
+        "type": "MVEL"
+      },
+      "type": "ATOMIC"
+    }
+  ],
+  "edges": [
+    {
+      "source": "start",
+      "target": "end",
+      "type": "SKIP_TILL_NEXT"
+    }
+  ],
+  "window": null,
+  "afterMatchStrategy": {
+    "type": "SKIP_PAST_LAST_EVENT",
+    "patternName": null
+  },
+  "type": "COMPOSITE",
+  "version": 1
+}

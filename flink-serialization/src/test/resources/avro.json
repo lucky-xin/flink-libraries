@@ -1,0 +1,537 @@
+{
+  "type": "record",
+  "name": "Test_Data",
+  "fields": [
+    {
+      "name": "sampleTime",
+      "type": {
+        "type": "long",
+        "connect.name": "Sample Time"
+      }
+    },
+    {
+      "name": "partition",
+      "type": {
+        "type": "long",
+        "connect.name": "Partition"
+      }
+    },
+    {
+      "name": "offset",
+      "type": {
+        "type": "long",
+        "connect.name": "Offset"
+      }
+    },
+    {
+      "name": "series",
+      "type": {
+        "type": "string",
+        "connect.name": "Series"
+      }
+    },
+    {
+      "name": "modelCode",
+      "type": {
+        "type": "string",
+        "connect.name": "Model Code",
+        "arg.properties": {
+          "regex": "(MA|MU)[\\s\\S]+"
+        }
+      }
+    },
+    {
+      "name": "vin",
+      "type": {
+        "type": "string",
+        "connect.name": "Vin"
+      }
+    },
+    {
+      "name": "type",
+      "type": {
+        "type": "string",
+        "connect.name": "Type",
+        "arg.properties": {
+          "options": [
+            "tbox_period"
+          ]
+        }
+      }
+    },
+    {
+      "name": "content",
+      "type": {
+        "type": "record",
+        "name": "ConnectDefault",
+        "namespace": "io.confluent.connect.avro",
+        "fields": [
+          {
+            "name": "MCMRR_MasSt",
+            "type": {
+              "type": "int",
+              "arg.properties": {
+                "options": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ]
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "BattVolt",
+            "type": {
+              "type": "double",
+              "arg.properties": {
+                "range": {
+                  "min": 0,
+                  "max": 48
+                }
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "FLHVSMAutoModeSt",
+            "type": {
+              "type": "int",
+              "arg.properties": {
+                "options": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ]
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "PsngrDoorAjarSt",
+            "type": {
+              "type": "int",
+              "arg.properties": {
+                "options": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ]
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "FRHeatingActLevel",
+            "type": {
+              "type": "int",
+              "arg.properties": {
+                "options": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ]
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "RearFogLampSt",
+            "type": {
+              "type": "int",
+              "arg.properties": {
+                "options": [
+                  0,
+                  1
+                ]
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "KeySt",
+            "type": {
+              "type": "int",
+              "arg.properties": {
+                "options": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ]
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "HazardLampSt",
+            "type": {
+              "type": "int",
+              "arg.properties": {
+                "options": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ]
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "RLDoorAjarSt",
+            "type": {
+              "type": "int",
+              "arg.properties": {
+                "options": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ]
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "PsngrDoorLockSt",
+            "type": {
+              "type": "int",
+              "arg.properties": {
+                "options": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ]
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "BonnetAjarSt",
+            "type": {
+              "type": "int",
+              "arg.properties": {
+                "options": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ]
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "LowBeamCmd",
+            "type": {
+              "type": "int",
+              "arg.properties": {
+                "options": [
+                  0,
+                  1
+                ]
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "FRVentilatingActLevel",
+            "type": {
+              "type": "int",
+              "arg.properties": {
+                "options": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ]
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "DriverDoorAjarSt",
+            "type": {
+              "type": "int",
+              "arg.properties": {
+                "options": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ]
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "WINDEXITSPD",
+            "type": {
+              "type": "int",
+              "arg.properties": {
+                "options": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ]
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "SOC_STATE",
+            "type": {
+              "type": "int",
+              "arg.properties": {
+                "options": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ]
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "HighBeamCmd",
+            "type": {
+              "type": "int",
+              "arg.properties": {
+                "options": [
+                  0,
+                  1
+                ]
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "FLVentilatingActLevel",
+            "type": {
+              "type": "int",
+              "arg.properties": {
+                "options": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ]
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "BattCurrent",
+            "type": "double",
+            "arg.properties": {
+              "range": {
+                "min": -32768,
+                "max": 0
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "RRDoorAjarSt",
+            "type": {
+              "type": "int",
+              "arg.properties": {
+                "options": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ]
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "SOC",
+            "type": {
+              "type": "int",
+              "arg.properties": {
+                "range": {
+                  "min": 0,
+                  "max": 100
+                }
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "FrontFogLampSt",
+            "type": {
+              "type": "int",
+              "arg.properties": {
+                "options": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ]
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "MCMRL_MasSt",
+            "type": {
+              "type": "int",
+              "arg.properties": {
+                "options": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ]
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "FRHVSMAutoModeSt",
+            "type": {
+              "type": "int",
+              "arg.properties": {
+                "options": [
+                  0,
+                  1
+                ]
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "LatestLockUnlockCmd",
+            "type": {
+              "type": "int",
+              "arg.properties": {
+                "options": [
+                  3,
+                  7,
+                  19
+                ]
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "Reissue",
+            "type": {
+              "type": "int",
+              "arg.properties": {
+                "options": [
+                  0
+                ]
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "DriverDoorLockSt",
+            "type": {
+              "type": "int",
+              "arg.properties": {
+                "options": [
+                  0,
+                  1
+                ]
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "MCMFL_MasSt",
+            "type": {
+              "type": "int",
+              "arg.properties": {
+                "options": [
+                  0,
+                  1
+                ]
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "MCMFR_MasSt",
+            "type": {
+              "type": "int",
+              "arg.properties": {
+                "options": [
+                  0,
+                  1
+                ]
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "FLHeatingActLevel",
+            "type": {
+              "type": "int",
+              "arg.properties": {
+                "options": [
+                  0,
+                  1
+                ]
+              }
+            },
+            "default": null
+          },
+          {
+            "name": "CurrentRange",
+            "type": "int",
+            "arg.properties": {
+              "options": [
+                0,
+                1,
+                2
+              ]
+            }
+          },
+          {
+            "name": "TrunkAjarSt",
+            "type": {
+              "type": "int",
+              "arg.properties": {
+                "options": [
+                  0,
+                  1
+                ]
+              }
+            },
+            "default": null
+          }
+        ]
+      }
+    }
+  ],
+  "connect.name": "Test Data"
+}

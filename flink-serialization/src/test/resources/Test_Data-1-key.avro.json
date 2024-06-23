@@ -1,0 +1,36 @@
+{
+  "type": "record",
+  "name": "Test_Data_Key",
+  "fields": [
+    {
+      "name": "series",
+      "type": {
+        "type": "string",
+        "connect.name": "Series"
+      }
+    },
+    {
+      "name": "modelCode",
+      "type": {
+        "type": "string",
+        "connect.name": "Model Code",
+        "arg.properties": {
+          "regex": "(MA|MU)[\\s\\S]+"
+        }
+      }
+    },
+    {
+      "name": "vin",
+      "type": {
+        "type": "string",
+        "connect.name": "Vin",
+        "arg.properties": {
+          "options": [
+            "LMGMU001"
+          ]
+        }
+      }
+    }
+  ],
+  "connect.name": "Test Data Key"
+}
