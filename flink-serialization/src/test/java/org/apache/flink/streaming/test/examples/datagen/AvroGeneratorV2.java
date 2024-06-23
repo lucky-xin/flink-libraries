@@ -28,7 +28,6 @@ import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.connector.source.SourceReaderContext;
 import org.apache.flink.api.connector.source.util.ratelimit.RateLimiterStrategy;
 import org.apache.flink.configuration.Configuration;
-import org.apache.flink.connector.base.DeliveryGuarantee;
 import org.apache.flink.connector.datagen.source.DataGeneratorSource;
 import org.apache.flink.connector.datagen.source.GeneratorFunction;
 import org.apache.flink.connector.kafka.sink.KafkaRecordSerializationSchema;
@@ -116,7 +115,6 @@ public class AvroGeneratorV2 {
                         .setValueSerializationSchema(avroValueSchema)
                         .build()
                 )
-                .setDeliveryGuarantee(DeliveryGuarantee.AT_LEAST_ONCE)
                 .setKafkaProducerConfig(properties())
                 .build();
         streamSource.process(new ProcessFunction<GenericRecord, GenericRecord>() {
