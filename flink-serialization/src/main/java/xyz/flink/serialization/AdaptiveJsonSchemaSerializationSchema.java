@@ -34,7 +34,6 @@ public class AdaptiveJsonSchemaSerializationSchema extends SchemaRegistryJsonSch
      * Writer that writes the serialized record to {@link ByteArrayOutputStream}.
      */
     private transient ParsedSchema surSchema;
-    private transient ObjectMapper mapper;
 
     @NonNull
     private final String surSubject;
@@ -46,7 +45,7 @@ public class AdaptiveJsonSchemaSerializationSchema extends SchemaRegistryJsonSch
         }
         try {
             checkInitialized();
-            JsonNode jsonNode = mapper.valueToTree(origValue);
+            JsonNode jsonNode = this.serializer.objectMapper().valueToTree(origValue);
             if (jsonNode.has("schema")) {
                 JsonNode payload = jsonNode.get("payload");
                 if (payload != null) {
@@ -54,7 +53,7 @@ public class AdaptiveJsonSchemaSerializationSchema extends SchemaRegistryJsonSch
                 }
             }
             Schema surConnectSchema = this.jsonSchemaData.toConnectSchema((JsonSchema) this.surSchema);
-            if (surConnectSchema.type()!= Schema.Type.STRUCT) {
+            if (surConnectSchema.type() != Schema.Type.STRUCT) {
                 throw new IllegalStateException("source schema type must be struct.");
             }
 
@@ -92,7 +91,6 @@ public class AdaptiveJsonSchemaSerializationSchema extends SchemaRegistryJsonSch
                 meta.getSchema(),
                 meta.getReferences()
         ).orElseThrow(() -> new IllegalStateException("Failed to parse schema"));
-        this.mapper = new ObjectMapper();
     }
 
     @Override
