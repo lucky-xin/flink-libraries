@@ -215,7 +215,7 @@ public abstract class AbstractSchemaRegistrySchema<T> implements Serializable, C
      *
      * @return
      */
-    protected ParsedSchema createSchema() throws IOException {
+    public ParsedSchema createSchema() throws IOException {
         try {
             if (this.schemaRegistryClient == null) {
                 this.schemaRegistryClient = createSchemaRegistryClient();

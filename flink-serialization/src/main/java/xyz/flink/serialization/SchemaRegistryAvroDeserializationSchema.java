@@ -52,7 +52,7 @@ public class SchemaRegistryAvroDeserializationSchema<T> extends AbstractSchemaRe
     }
 
     @Override
-    protected ParsedSchema createSchema() throws IOException {
+    public ParsedSchema createSchema() throws IOException {
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
         if (SpecificRecord.class.isAssignableFrom(getType())) {
             @SuppressWarnings("unchecked")

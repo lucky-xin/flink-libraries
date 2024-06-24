@@ -50,7 +50,7 @@ public class SchemaRegistryAvroSerializationSchema<T>
     }
 
     @Override
-    protected ParsedSchema createSchema() throws IOException {
+    public ParsedSchema createSchema() throws IOException {
         if (SpecificRecord.class.isAssignableFrom(getType())) {
             Schema s = SpecificData.get().getSchema(getType());
             return new AvroSchema(s);
