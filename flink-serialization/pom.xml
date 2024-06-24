@@ -237,9 +237,9 @@ under the License.
                 <configuration>
                     <scalaVersion>${scala.version}</scalaVersion>
                     <recompileMode>incremental</recompileMode>
-                    <args>
-                        <arg>-target:jvm-1.8</arg>
-                    </args>
+<!--                    <args>-->
+<!--                        <arg>-target:jvm-1.8</arg>-->
+<!--                    </args>-->
                 </configuration>
             </plugin>
         </plugins>
