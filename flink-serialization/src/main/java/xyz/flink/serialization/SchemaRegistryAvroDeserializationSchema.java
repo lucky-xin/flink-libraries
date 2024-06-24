@@ -71,5 +71,8 @@ public class SchemaRegistryAvroDeserializationSchema<T> extends AbstractSchemaRe
     @Override
     public void close() throws IOException {
         super.close();
+        if (this.deserializer != null) {
+            this.deserializer.close();
+        }
     }
 }

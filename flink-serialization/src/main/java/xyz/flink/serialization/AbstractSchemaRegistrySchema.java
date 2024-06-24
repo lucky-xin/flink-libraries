@@ -71,17 +71,20 @@ public abstract class AbstractSchemaRegistrySchema<T> implements Serializable, C
     @Getter
     @NonNull
     private final String schemaType;
+
     /**
      * subject of schema registry to produce
      */
     @Getter
     @NonNull
     private final String subject;
+
     /**
      * URL of schema registry to connect
      */
     @NonNull
     private final String schemaRegistryUrl;
+
     /**
      * map with additional schema configs (for example SSL properties)
      */
@@ -99,6 +102,7 @@ public abstract class AbstractSchemaRegistrySchema<T> implements Serializable, C
     @Getter
     private final boolean key;
 
+    @Getter
     private transient ParsedSchema schema;
 
     @Getter
@@ -213,6 +217,9 @@ public abstract class AbstractSchemaRegistrySchema<T> implements Serializable, C
      */
     protected ParsedSchema createSchema() throws IOException {
         try {
+            if (this.schemaRegistryClient == null) {
+                this.schemaRegistryClient = createSchemaRegistryClient();
+            }
             SchemaMetadata metadata = this.schemaRegistryClient.getLatestSchemaMetadata(this.subject);
             return this.schemaRegistryClient.parseSchema(
                             metadata.getSchemaType(),
@@ -223,28 +230,6 @@ public abstract class AbstractSchemaRegistrySchema<T> implements Serializable, C
         } catch (RestClientException e) {
             throw new IOException("get schema error,subject:" + subject, e);
         }
-    }
-
-    public ParsedSchema getSchema() {
-        if (this.schema != null) {
-            return this.schema;
-        }
-        if (this.schemaRegistryClient == null) {
-            this.schemaRegistryClient = createSchemaRegistryClient();
-        }
-        try {
-            SchemaMetadata metadata = this.schemaRegistryClient.getLatestSchemaMetadata(this.subject);
-            this.schema = this.schemaRegistryClient.parseSchema(
-                    schemaType,
-                    metadata.getSchema(),
-                    metadata.getReferences()
-            ).orElseThrow(() -> new IllegalStateException("parse schema failed"));
-        } catch (RestClientException e) {
-            throw new IllegalStateException("get latest schema metadata failed", e);
-        } catch (IOException e) {
-            throw new IllegalStateException("Internal HTTP error", e);
-        }
-        return this.schema;
     }
 
     @Override
@@ -284,7 +269,7 @@ public abstract class AbstractSchemaRegistrySchema<T> implements Serializable, C
 
         @Override
         public void configure(Map<String, ?> map) {
-
+            // document why this method is empty
         }
     }
 }
