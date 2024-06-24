@@ -45,7 +45,7 @@ import static io.confluent.kafka.serializers.json.KafkaJsonSchemaDeserializerCon
 import static io.confluent.kafka.serializers.json.KafkaJsonSchemaDeserializerConfig.JSON_VALUE_TYPE;
 
 /**
- * SchemaRegistrySchema
+ * AbstractSchemaRegistrySchema
  *
  * @author chaoxin.lu
  * @version V 1.0
@@ -54,16 +54,21 @@ import static io.confluent.kafka.serializers.json.KafkaJsonSchemaDeserializerCon
 @SuperBuilder
 public abstract class AbstractSchemaRegistrySchema<T> implements Serializable, Closeable {
     private static final long serialVersionUID = -1671641202177852775L;
-    /**
-     * class of record
-     */
-    protected final Class<T> type;
+
     protected static final byte MAGIC_BYTE = 0x0;
     protected static final int ID_SIZE = 4;
 
     /**
+     * class of record
+     */
+    @Getter
+    @NonNull
+    private final Class<T> type;
+
+    /**
      * schemaType of schema registry to produce
      */
+    @Getter
     @NonNull
     private final String schemaType;
     /**
@@ -78,22 +83,29 @@ public abstract class AbstractSchemaRegistrySchema<T> implements Serializable, C
     @NonNull
     private final String schemaRegistryUrl;
     /**
-     * map with additional schema registry configs (for example SSL properties)
+     * map with additional schema configs (for example SSL properties)
      */
     @Getter
     @NonNull
-    private Map<String, Serializable> registryConfigs;
+    private Map<String, Serializable> configs;
+
+    @Getter
     private final Map<String, String> registryHttpHeaders;
+
+    @Getter
     @Builder.Default
     private int identityMapCapacity = 1000;
-    protected final boolean key;
 
+    @Getter
+    private final boolean key;
 
-    protected transient ParsedSchema schema;
-    protected transient CachedSchemaRegistryClient schemaRegistryClient;
+    private transient ParsedSchema schema;
+
+    @Getter
+    private transient CachedSchemaRegistryClient schemaRegistryClient;
 
     protected CachedSchemaRegistryClient createSchemaRegistryClient() {
-        Map<String, Object> restConfigs = this.registryConfigs.entrySet()
+        Map<String, Object> restConfigs = this.configs.entrySet()
                 .stream()
                 .collect(Collectors.toMap(
                                 e -> e.getKey().startsWith(SchemaRegistryClientConfig.CLIENT_NAMESPACE)
@@ -124,7 +136,7 @@ public abstract class AbstractSchemaRegistrySchema<T> implements Serializable, C
                 restService,
                 identityMapCapacity,
                 providers,
-                registryConfigs,
+                configs,
                 registryHttpHeaders
         );
         if (!restConfigs.containsKey(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG)) {
@@ -147,33 +159,23 @@ public abstract class AbstractSchemaRegistrySchema<T> implements Serializable, C
         return null;
     }
 
-    protected void checkInitialized() throws IOException, RestClientException {
+    protected void checkInitialized() throws IOException {
         if (this.schemaRegistryClient != null) {
             return;
         }
-        this.registryConfigs = new HashMap<>(registryConfigs);
-        this.registryConfigs.putIfAbsent(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl);
-        this.registryConfigs.putIfAbsent(KafkaJsonSchemaDeserializerConfig.FAIL_UNKNOWN_PROPERTIES, false);
-        this.registryConfigs.putIfAbsent(KafkaJsonSchemaDeserializerConfig.FAIL_INVALID_SCHEMA, true);
+        this.configs = new HashMap<>(configs);
+        this.configs.putIfAbsent(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl);
+        this.configs.putIfAbsent(KafkaJsonSchemaDeserializerConfig.FAIL_UNKNOWN_PROPERTIES, false);
+        this.configs.putIfAbsent(KafkaJsonSchemaDeserializerConfig.FAIL_INVALID_SCHEMA, true);
         if (this.key) {
-            this.registryConfigs.putIfAbsent(KEY_SUBJECT_NAME_STRATEGY, IdentifySubjectNameStrategy.class.getName());
-            this.registryConfigs.putIfAbsent(JSON_KEY_TYPE, this.type.getName());
+            this.configs.putIfAbsent(KEY_SUBJECT_NAME_STRATEGY, IdentifySubjectNameStrategy.class.getName());
+            this.configs.putIfAbsent(JSON_KEY_TYPE, this.type.getName());
         } else {
-            this.registryConfigs.putIfAbsent(VALUE_SUBJECT_NAME_STRATEGY, IdentifySubjectNameStrategy.class.getName());
-            this.registryConfigs.putIfAbsent(JSON_VALUE_TYPE, this.type.getName());
+            this.configs.putIfAbsent(VALUE_SUBJECT_NAME_STRATEGY, IdentifySubjectNameStrategy.class.getName());
+            this.configs.putIfAbsent(JSON_VALUE_TYPE, this.type.getName());
         }
         this.schemaRegistryClient = createSchemaRegistryClient();
-        try {
-            SchemaMetadata metadata = this.schemaRegistryClient.getLatestSchemaMetadata(this.subject);
-            this.schema = this.schemaRegistryClient.parseSchema(
-                            metadata.getSchemaType(),
-                            metadata.getSchema(),
-                            metadata.getReferences()
-                    )
-                    .orElseThrow(() -> new IllegalStateException("Failed to parse schema"));
-        } catch (RestClientException e) {
-            throw new IOException("get schema error,subject:" + subject, e);
-        }
+        this.schema = createSchema();
     }
 
     private SSLSocketFactory createSSLSocketFactory() {
@@ -201,6 +203,25 @@ public abstract class AbstractSchemaRegistrySchema<T> implements Serializable, C
             return sslContext.getSocketFactory();
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
             throw new IllegalStateException(e);
+        }
+    }
+
+    /**
+     * 创建Schema
+     *
+     * @return
+     */
+    protected ParsedSchema createSchema() throws IOException {
+        try {
+            SchemaMetadata metadata = this.schemaRegistryClient.getLatestSchemaMetadata(this.subject);
+            return this.schemaRegistryClient.parseSchema(
+                            metadata.getSchemaType(),
+                            metadata.getSchema(),
+                            metadata.getReferences()
+                    )
+                    .orElseThrow(() -> new IllegalStateException("Failed to parse schema"));
+        } catch (RestClientException e) {
+            throw new IOException("get schema error,subject:" + subject, e);
         }
     }
 
@@ -244,6 +265,7 @@ public abstract class AbstractSchemaRegistrySchema<T> implements Serializable, C
          * @param schema the schema of the record being serialized/deserialized
          * @return The subject name under which the schema should be registered.
          */
+        @Override
         public String subjectName(String topic, boolean isKey, ParsedSchema schema) {
             return subjectName(topic, isKey);
         }

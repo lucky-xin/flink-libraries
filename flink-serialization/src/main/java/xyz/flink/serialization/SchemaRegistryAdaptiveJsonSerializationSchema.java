@@ -1,7 +1,6 @@
 package xyz.flink.serialization;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.confluent.kafka.schemaregistry.ParsedSchema;
@@ -20,14 +19,14 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * AdaptiveJsonSchemaSerializationSchema
+ * SchemaRegistryAdaptiveJsonSerializationSchema
  *
  * @author chaoxin.lu
  * @version V 1.0
  * @since 2024-06-21
  */
 @SuperBuilder
-public class AdaptiveJsonSchemaSerializationSchema extends SchemaRegistryJsonSchemaSerializationSchema<Object> {
+public class SchemaRegistryAdaptiveJsonSerializationSchema extends SchemaRegistryJsonSerializationSchema<Object> {
     private static final long serialVersionUID = -1671641202177852775L;
 
     /**
@@ -74,23 +73,25 @@ public class AdaptiveJsonSchemaSerializationSchema extends SchemaRegistryJsonSch
             return super.serialize(result);
         } catch (IOException e) {
             throw new WrappingRuntimeException("Failed to serialize schema registry.", e);
-        } catch (RestClientException e) {
-            throw new WrappingRuntimeException("Failed to get schema from schema registry.", e);
         }
     }
 
     @Override
-    protected void checkInitialized() throws IOException, RestClientException {
+    protected void checkInitialized() throws IOException {
         if (this.surSchema != null) {
             return;
         }
         super.checkInitialized();
-        SchemaMetadata meta = this.schemaRegistryClient.getLatestSchemaMetadata(this.surSubject);
-        this.surSchema = this.schemaRegistryClient.parseSchema(
-                meta.getSchemaType(),
-                meta.getSchema(),
-                meta.getReferences()
-        ).orElseThrow(() -> new IllegalStateException("Failed to parse schema"));
+        try {
+            SchemaMetadata meta = this.getSchemaRegistryClient().getLatestSchemaMetadata(this.surSubject);
+            this.surSchema = this.getSchemaRegistryClient().parseSchema(
+                    meta.getSchemaType(),
+                    meta.getSchema(),
+                    meta.getReferences()
+            ).orElseThrow(() -> new IllegalStateException("Failed to parse schema"));
+        } catch (RestClientException e) {
+            throw new IOException("Failed to get schema from schema registry.", e);
+        }
     }
 
     @Override

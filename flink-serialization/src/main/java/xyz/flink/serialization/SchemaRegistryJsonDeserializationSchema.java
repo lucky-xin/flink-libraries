@@ -1,6 +1,5 @@
 package xyz.flink.serialization;
 
-import io.confluent.kafka.schemaregistry.client.rest.exceptions.RestClientException;
 import io.confluent.kafka.serializers.json.KafkaJsonSchemaDeserializer;
 import lombok.experimental.SuperBuilder;
 import org.apache.flink.api.common.serialization.DeserializationSchema;
@@ -9,14 +8,14 @@ import org.apache.flink.api.common.typeinfo.TypeInformation;
 import java.io.IOException;
 
 /**
- * SchemaRegistryAvroDeserializationSchema
+ * SchemaRegistryJsonDeserializationSchema
  *
  * @author chaoxin.lu
  * @version V 1.0
  * @since 2024-06-21
  */
 @SuperBuilder
-public class SchemaRegistryJsonSchemaDeserializationSchema<T>
+public class SchemaRegistryJsonDeserializationSchema<T>
         extends AbstractSchemaRegistrySchema<T> implements DeserializationSchema<T> {
     private static final long serialVersionUID = -1671641202177852775L;
 
@@ -28,12 +27,7 @@ public class SchemaRegistryJsonSchemaDeserializationSchema<T>
         if (byts == null) {
             return null;
         }
-        try {
-            checkInitialized();
-        } catch (RestClientException e) {
-            throw new IOException("Init error: ", e);
-        }
-
+        checkInitialized();
         return this.deserializer.deserialize(getSubject(), byts);
     }
 
@@ -43,18 +37,18 @@ public class SchemaRegistryJsonSchemaDeserializationSchema<T>
     }
 
     @Override
-    protected void checkInitialized() throws IOException, RestClientException {
+    protected void checkInitialized() throws IOException {
         if (this.deserializer != null) {
             return;
         }
         super.checkInitialized();
-        this.deserializer = new KafkaJsonSchemaDeserializer<>(this.schemaRegistryClient);
-        this.deserializer.configure(this.getRegistryConfigs(), this.key);
+        this.deserializer = new KafkaJsonSchemaDeserializer<>(this.getSchemaRegistryClient());
+        this.deserializer.configure(this.getConfigs(), this.isKey());
     }
 
     @Override
     public TypeInformation<T> getProducedType() {
-        return TypeInformation.of(type);
+        return TypeInformation.of(getType());
     }
 
     @Override

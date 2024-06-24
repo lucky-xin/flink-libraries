@@ -32,7 +32,6 @@ import org.apache.flink.connector.datagen.source.DataGeneratorSource;
 import org.apache.flink.connector.datagen.source.GeneratorFunction;
 import org.apache.flink.connector.kafka.sink.KafkaRecordSerializationSchema;
 import org.apache.flink.connector.kafka.sink.KafkaSink;
-import org.apache.flink.formats.avro.AvroFormatOptions;
 import org.apache.flink.formats.avro.typeutils.GenericRecordAvroTypeInfo;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -79,8 +78,7 @@ public class AvroGeneratorV2 {
                         .type(GenericRecord.class)
                         .schemaRegistryUrl(schemaRegistryUrl)
                         .subject(keySubject)
-                        .registryConfigs(registryConfigs)
-                        .encoding(AvroFormatOptions.AvroEncoding.JSON)
+                        .configs(registryConfigs)
                         .schemaType(AvroSchema.TYPE)
                         .key(true)
                         .build();
@@ -89,8 +87,7 @@ public class AvroGeneratorV2 {
                         .type(GenericRecord.class)
                         .schemaRegistryUrl(schemaRegistryUrl)
                         .subject(keySubject)
-                        .registryConfigs(registryConfigs)
-                        .encoding(AvroFormatOptions.AvroEncoding.JSON)
+                        .configs(registryConfigs)
                         .schemaType(AvroSchema.TYPE)
                         .key(false)
                         .build();

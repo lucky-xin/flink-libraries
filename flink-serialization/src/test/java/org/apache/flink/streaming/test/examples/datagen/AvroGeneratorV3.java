@@ -38,16 +38,15 @@ import org.apache.flink.connector.datagen.source.DataGeneratorSource;
 import org.apache.flink.connector.datagen.source.GeneratorFunction;
 import org.apache.flink.connector.kafka.sink.KafkaRecordSerializationSchema;
 import org.apache.flink.connector.kafka.sink.KafkaSink;
-import org.apache.flink.formats.avro.AvroFormatOptions;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.test.examples.entity.bo.TestData;
 import org.apache.kafka.common.config.SslConfigs;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.apache.kafka.connect.data.SchemaAndValue;
-import xyz.flink.serialization.AdaptiveJsonSchemaSerializationSchema;
+import xyz.flink.serialization.SchemaRegistryAdaptiveAvroSerializationSchema;
 import xyz.flink.serialization.SchemaRegistryAvroSerializationSchema;
-import xyz.flink.serialization.SchemaRegistryJsonSchemaSerializationSchema;
+import xyz.flink.serialization.SchemaRegistryJsonSerializationSchema;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -85,29 +84,28 @@ public class AvroGeneratorV3 {
                         .type(GenericRecord.class)
                         .schemaRegistryUrl(schemaRegistryUrl)
                         .subject(valueSubject)
-                        .registryConfigs(registryConfigs)
+                        .configs(registryConfigs)
                         .schemaType(AvroSchema.TYPE)
-                        .encoding(AvroFormatOptions.AvroEncoding.JSON)
                         .key(false)
                         .build();
         AvroSchema avroSchema = (AvroSchema) avroValueSchema.getSchema();
-        AdaptiveJsonSchemaSerializationSchema keySchema = AdaptiveJsonSchemaSerializationSchema
+        SchemaRegistryAdaptiveAvroSerializationSchema keySchema = SchemaRegistryAdaptiveAvroSerializationSchema
                 .builder()
                 .type(Object.class)
                 .schemaRegistryUrl(schemaRegistryUrl)
                 .subject("Test_Data-1-key.json")
                 .surSubject("Test_Data-1-value.json")
-                .registryConfigs(registryConfigs)
+                .configs(registryConfigs)
                 .schemaType(JsonSchema.TYPE)
                 .key(true)
                 .build();
-        SchemaRegistryJsonSchemaSerializationSchema<TestData> valueSchema = SchemaRegistryJsonSchemaSerializationSchema
+        SchemaRegistryJsonSerializationSchema<TestData> valueSchema = SchemaRegistryJsonSerializationSchema
                 .<TestData>builder()
                 .type(TestData.class)
                 .schemaRegistryUrl(schemaRegistryUrl)
                 .subject("Test_Data-1-value.json")
                 .schemaType(JsonSchema.TYPE)
-                .registryConfigs(registryConfigs)
+                .configs(registryConfigs)
                 .key(false)
                 .build();
         GeneratorFunction<Long, TestData> generatorFunction = new JsonGeneratorFunction(maxRecords, avroSchema.rawSchema());
