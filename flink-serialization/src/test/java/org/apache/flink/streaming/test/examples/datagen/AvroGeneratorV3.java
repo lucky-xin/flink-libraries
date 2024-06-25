@@ -44,7 +44,7 @@ import org.apache.flink.streaming.test.examples.entity.bo.TestData;
 import org.apache.kafka.common.config.SslConfigs;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.apache.kafka.connect.data.SchemaAndValue;
-import xyz.flink.serialization.SchemaRegistryAdaptiveAvroSerializationSchema;
+import xyz.flink.serialization.SchemaRegistryAdaptiveJsonSerializationSchema;
 import xyz.flink.serialization.SchemaRegistryAvroSerializationSchema;
 import xyz.flink.serialization.SchemaRegistryJsonSerializationSchema;
 
@@ -89,7 +89,7 @@ public class AvroGeneratorV3 {
                         .key(false)
                         .build();
         AvroSchema avroSchema = (AvroSchema) avroValueSchema.getSchema();
-        SchemaRegistryAdaptiveAvroSerializationSchema keySchema = SchemaRegistryAdaptiveAvroSerializationSchema
+        SchemaRegistryAdaptiveJsonSerializationSchema keySchema = SchemaRegistryAdaptiveJsonSerializationSchema
                 .builder()
                 .type(Object.class)
                 .schemaRegistryUrl(schemaRegistryUrl)

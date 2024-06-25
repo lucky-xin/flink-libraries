@@ -91,7 +91,7 @@ public class AvroGeneratorV2 {
                         .schemaType(AvroSchema.TYPE)
                         .key(false)
                         .build();
-        AvroSchema schema = (AvroSchema) avroValueSchema.getSchema();
+        AvroSchema schema = avroValueSchema.getSchema();
         GenericRecordAvroTypeInfo avroTypeInfo = new GenericRecordAvroTypeInfo(schema.rawSchema());
         GeneratorFunction<Long, GenericRecord> generatorFunction = new AvroGeneratorFunction(maxRecords, schema.rawSchema());
         DataGeneratorSource<GenericRecord> generatorSource = new DataGeneratorSource<>(

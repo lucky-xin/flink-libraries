@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.node.IntNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.NullNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Maps;
 import io.confluent.connect.avro.AvroDataConfig;
 import io.confluent.connect.schema.AbstractDataConfig;
 import io.confluent.connect.schema.ConnectEnum;
@@ -15,6 +16,7 @@ import io.confluent.connect.schema.ConnectUnion;
 import io.confluent.kafka.schemaregistry.avro.AvroSchema;
 import io.confluent.kafka.schemaregistry.utils.BoundedConcurrentHashMap;
 import io.confluent.kafka.serializers.NonRecordContainer;
+import lombok.Getter;
 import org.apache.avro.AvroTypeException;
 import org.apache.avro.JsonProperties;
 import org.apache.avro.generic.GenericData;
@@ -35,6 +37,7 @@ import org.apache.kafka.connect.data.SchemaBuilder;
 import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.data.Time;
 import org.apache.kafka.connect.data.Timestamp;
+import org.apache.kafka.connect.data.Values;
 import org.apache.kafka.connect.errors.DataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -187,14 +190,18 @@ public class AvroData {
                         .endRecord();
         // This is convenient to have extracted; we can't define it before ANYTHING_SCHEMA because it
         // uses ANYTHING_SCHEMA in its definition.
-        ANYTHING_SCHEMA_MAP_ELEMENT = ANYTHING_SCHEMA.getField("map").schema()
-                .getTypes().get(1) // The "map" field is optional, get the schema from the union type
+        ANYTHING_SCHEMA_MAP_ELEMENT = ANYTHING_SCHEMA.getField("map")
+                .schema()
+                //The "map" field is optional, get the schema from the union type
+                .getTypes().get(1)
                 .getElementType();
     }
 
 
-    // Convert values in Connect form into their logical types. These logical converters are
-    // discovered by logical type names specified in the field
+    /**
+     * Convert values in Connect form into their logical types. These logical converters are
+     * discovered by logical type names specified in the field
+     */
     private static final HashMap<String, LogicalTypeConverter> TO_CONNECT_LOGICAL_CONVERTERS = new HashMap<>();
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
@@ -391,7 +398,8 @@ public class AvroData {
         try {
             switch (schemaType) {
                 case INT8: {
-                    Byte byteValue = (Byte) value; // Check for correct type
+                    // Check for correct type
+                    Byte byteValue = (Byte) value;
                     Integer convertedByteValue = byteValue == null ? null : byteValue.intValue();
                     return maybeAddContainer(
                             avroSchema,
@@ -399,7 +407,8 @@ public class AvroData {
                             requireContainer);
                 }
                 case INT16: {
-                    Short shortValue = (Short) value; // Check for correct type
+                    // Check for correct type
+                    Short shortValue = (Short) value;
                     Integer convertedShortValue = shortValue == null ? null : shortValue.intValue();
                     return maybeAddContainer(
                             avroSchema,
@@ -408,31 +417,36 @@ public class AvroData {
                 }
 
                 case INT32:
-                    Integer intValue = (Integer) value; // Check for correct type
+                    // Check for correct type
+                    Integer intValue = (Integer) value;
                     return maybeAddContainer(
                             avroSchema,
                             maybeWrapSchemaless(schema, intValue, ANYTHING_SCHEMA_INT_FIELD),
                             requireContainer);
                 case INT64:
-                    Long longValue = (Long) value; // Check for correct type
+                    // Check for correct type
+                    Long longValue = (Long) value;
                     return maybeAddContainer(
                             avroSchema,
                             maybeWrapSchemaless(schema, longValue, ANYTHING_SCHEMA_LONG_FIELD),
                             requireContainer);
                 case FLOAT32:
-                    Float floatValue = (Float) value; // Check for correct type
+                    // Check for correct type
+                    Float floatValue = (Float) value;
                     return maybeAddContainer(
                             avroSchema,
                             maybeWrapSchemaless(schema, floatValue, ANYTHING_SCHEMA_FLOAT_FIELD),
                             requireContainer);
                 case FLOAT64:
-                    Double doubleValue = (Double) value; // Check for correct type
+                    // Check for correct type
+                    Double doubleValue = (Double) value;
                     return maybeAddContainer(
                             avroSchema,
                             maybeWrapSchemaless(schema, doubleValue, ANYTHING_SCHEMA_DOUBLE_FIELD),
                             requireContainer);
                 case BOOLEAN:
-                    Boolean boolValue = (Boolean) value; // Check for correct type
+                    // Check for correct type
+                    Boolean boolValue = (Boolean) value;
                     return maybeAddContainer(
                             avroSchema,
                             maybeWrapSchemaless(schema, boolValue, ANYTHING_SCHEMA_BOOLEAN_FIELD),
@@ -446,7 +460,8 @@ public class AvroData {
                         String enumSchemaName = schema.parameters().get(AVRO_TYPE_ENUM);
                         value = enumSymbol(avroSchema, value, enumSchemaName);
                     } else {
-                        String stringValue = (String) value; // Check for correct type
+                        // Check for correct type
+                        String stringValue = (String) value;
                     }
                     return maybeAddContainer(
                             avroSchema,
@@ -722,7 +737,7 @@ public class AvroData {
     }
 
     public org.apache.avro.Schema fromConnectSchema(Schema schema) {
-        return fromConnectSchema(schema, new HashMap<>());
+        return fromConnectSchema(schema, Maps.newHashMap());
     }
 
     public org.apache.avro.Schema fromConnectSchema(Schema schema,
@@ -797,10 +812,11 @@ public class AvroData {
                 baseSchema = org.apache.avro.SchemaBuilder.builder().booleanType();
                 break;
             case STRING:
-                if ((generalizedSumTypeSupport || enhancedSchemaSupport)
+                boolean label = (generalizedSumTypeSupport || enhancedSchemaSupport)
                         && schema.parameters() != null
                         && (schema.parameters().containsKey(GENERALIZED_TYPE_ENUM)
-                        || schema.parameters().containsKey(AVRO_TYPE_ENUM))) {
+                        || schema.parameters().containsKey(AVRO_TYPE_ENUM));
+                if (label) {
                     String paramName = generalizedSumTypeSupport ? GENERALIZED_TYPE_ENUM : AVRO_TYPE_ENUM;
                     List<String> symbols = new ArrayList<>();
                     for (Map.Entry<String, String> entry : schema.parameters().entrySet()) {
@@ -859,10 +875,13 @@ public class AvroData {
             case MAP:
                 // Avro only supports string keys, so we match the representation when possible, but
                 // otherwise fall back on a record representation
-                if (schema.keySchema().type() == Schema.Type.STRING
-                        && (!schema.keySchema().isOptional() || allowOptionalMapKey)) {
-                    baseSchema = org.apache.avro.SchemaBuilder.builder().map().values(
-                            fromConnectSchemaWithCycle(schema.valueSchema(), fromConnectContext, false));
+                label = schema.keySchema().type() == Schema.Type.STRING
+                        && (!schema.keySchema().isOptional() || allowOptionalMapKey);
+                if (label) {
+                    baseSchema = org.apache.avro.SchemaBuilder.builder().map()
+                            .values(
+                                    fromConnectSchemaWithCycle(schema.valueSchema(), fromConnectContext, false)
+                            );
                 } else {
                     // Special record name indicates format
                     List<org.apache.avro.Schema.Field> fields = new ArrayList<>();
@@ -1122,8 +1141,9 @@ public class AvroData {
         boolean nameOK = true;
         for (int i = 0, n = name.length(); i < n; i++) {
             char ch = name.charAt(i);
-            if ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z')
-                    || (ch >= '0' && ch <= '9') || ch == '_') {
+            boolean label = (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z')
+                    || (ch >= '0' && ch <= '9') || ch == '_';
+            if (label) {
                 continue;
             }
             nameOK = false;
@@ -1136,13 +1156,15 @@ public class AvroData {
         // String needs to be scrubbed
         String encoded = URLEncoder.encode(name, StandardCharsets.UTF_8);
         if (encoded.charAt(0) >= '0' && encoded.charAt(0) <= '9') {
-            encoded = "x" + encoded;  // use an arbitrary valid prefix
+            // use an arbitrary valid prefix
+            encoded = "x" + encoded;
         }
         StringBuilder sb = new StringBuilder(encoded);
         for (int i = 0, n = sb.length(); i < n; i++) {
             char ch = sb.charAt(i);
-            if ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z')
-                    || (ch >= '0' && ch <= '9') || ch == '_') {
+            boolean label = (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z')
+                    || (ch >= '0' && ch <= '9') || ch == '_';
+            if (label) {
                 continue;
             }
             sb.setCharAt(i, '_');
@@ -1490,41 +1512,28 @@ public class AvroData {
             Object converted = null;
             switch (schema.type()) {
                 // Pass through types
-                case INT32: {
-                    Integer intValue = (Integer) value; // Validate type
-                    converted = value;
-                    break;
-                }
-                case INT64: {
-                    Long longValue = (Long) value; // Validate type
-                    converted = value;
-                    break;
-                }
-                case FLOAT32: {
-                    Float floatValue = (Float) value; // Validate type
-                    converted = value;
-                    break;
-                }
-                case FLOAT64: {
-                    Double doubleValue = (Double) value; // Validate type
-                    converted = value;
-                    break;
-                }
-                case BOOLEAN: {
-                    Boolean boolValue = (Boolean) value; // Validate type
-                    converted = value;
-                    break;
-                }
-
                 case INT8:
-                    // Encoded as an Integer
-                    converted = ((Integer) value).byteValue();
+                    converted = Values.convertToByte(schema, value);
                     break;
                 case INT16:
-                    // Encoded as an Integer
-                    converted = ((Integer) value).shortValue();
+                    converted = Values.convertToShort(schema, value);
                     break;
-
+                case INT32:
+                    converted = Values.convertToInteger(schema, value);
+                    break;
+                case INT64:
+                    converted = Values.convertToLong(schema, value);
+                    break;
+                case FLOAT32:
+                    converted = Values.convertToFloat(schema, value);
+                    break;
+                case FLOAT64:
+                    converted = Values.convertToDouble(schema, value);
+                    break;
+                case BOOLEAN:
+                    // Validate type
+                    converted = Values.convertToBoolean(schema, value);
+                    break;
                 case STRING:
                     if (value instanceof String) {
                         converted = value;
@@ -1605,11 +1614,14 @@ public class AvroData {
                         int index = 0;
                         for (Field field : schema.fields()) {
                             Schema fieldSchema = field.schema();
-                            if (isInstanceOfAvroSchemaTypeForSimpleSchema(fieldSchema, value, index)
-                                    || (valueRecordSchema != null && schemaEquals(valueRecordSchema, fieldSchema))) {
-                                converted = new Struct(schema).put(
+                            boolean label = isInstanceOfAvroSchemaTypeForSimpleSchema(fieldSchema, value, index)
+                                    || (valueRecordSchema != null && schemaEquals(valueRecordSchema, fieldSchema));
+                            if (label) {
+                                converted = new Struct(schema)
+                                        .put(
                                         unionMemberFieldName(fieldSchema, index),
-                                        toConnectData(fieldSchema, value, toConnectContext));
+                                                toConnectData(fieldSchema, value, toConnectContext)
+                                        );
                                 break;
                             }
                             index++;
@@ -1948,8 +1960,11 @@ public class AvroData {
             }
         }
 
-        // Included Kafka Connect version takes priority, fall back to schema registry version
-        int versionInt = -1;  // A valid version must be a positive integer (assumed throughout SR)
+        /**
+         * Included Kafka Connect version takes priority, fall back to schema registry version
+         * A valid version must be a positive integer (assumed throughout SR)
+         */
+        int versionInt = -1;
         Object versionNode = schema.getObjectProp(CONNECT_VERSION_PROP);
         if (versionNode != null) {
             if (!(versionNode instanceof Number)) {
@@ -2330,7 +2345,13 @@ public class AvroData {
     }
 
     private interface LogicalTypeConverter {
-
+        /**
+         * Convert a logical type to a primitive type.
+         *
+         * @param schema
+         * @param value
+         * @return
+         */
         Object convert(Schema schema, Object value);
     }
 
@@ -2402,6 +2423,7 @@ public class AvroData {
         }
     }
 
+    @Getter
     static class Pair<K, V> {
         private final K key;
         private final V value;
@@ -2409,14 +2431,6 @@ public class AvroData {
         public Pair(K key, V value) {
             this.key = key;
             this.value = value;
-        }
-
-        public K getKey() {
-            return key;
-        }
-
-        public V getValue() {
-            return value;
         }
 
         @Override

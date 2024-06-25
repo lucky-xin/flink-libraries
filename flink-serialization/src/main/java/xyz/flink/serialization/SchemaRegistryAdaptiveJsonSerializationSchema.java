@@ -60,8 +60,10 @@ public class SchemaRegistryAdaptiveJsonSerializationSchema extends SchemaRegistr
             Struct dstStruct = new Struct(dstConnectSchema);
             for (Field field : fields) {
                 Field f = surConnectSchema.field(field.name());
-                Object object = surStruct.get(f);
-                dstStruct.put(field, object);
+                Object object = surStruct.get(field.name());
+                JsonNode orig = this.serializer.objectMapper().convertValue(object, JsonNode.class);
+                Object val = this.jsonSchemaData.toConnectData(f.schema(), orig);
+                dstStruct.put(field.name(), val);
             }
             JsonNode dstValueValue = this.jsonSchemaData.fromConnectData(dstConnectSchema, dstStruct);
             ObjectNode result = JsonNodeFactory.instance.objectNode();
