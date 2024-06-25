@@ -131,7 +131,7 @@ public abstract class AbstractSchemaRegistrySchema<T, S extends ParsedSchema> im
         } else if (ProtobufSchema.class.equals(types[1])) {
             providers.add(new ProtobufSchemaProvider());
         } else {
-            throw new IllegalArgumentException("Unsupported schema type: " + types[0]);
+            throw new IllegalArgumentException("Unsupported schema type: " + types[1]);
         }
         CachedSchemaRegistryClient client = new CachedSchemaRegistryClient(
                 restService,

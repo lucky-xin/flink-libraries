@@ -66,10 +66,6 @@ public class AvroGeneratorV3 {
     private static final Random random = new Random();
 
     public static void main(String[] args) throws Exception {
-        Type actualType = TypeUtil.getActualType(
-                SchemaRegistryAdaptiveJsonSerializationSchema.class,
-                AbstractSchemaRegistrySchema.class
-        );
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironment();
         env.setParallelism(1);
         long maxRecords = 4000;
