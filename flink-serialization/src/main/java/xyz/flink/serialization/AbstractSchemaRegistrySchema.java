@@ -30,6 +30,8 @@ import javax.net.ssl.X509TrustManager;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
@@ -64,13 +66,6 @@ public abstract class AbstractSchemaRegistrySchema<T, S extends ParsedSchema> im
     @Getter
     @NonNull
     private final Class<T> type;
-
-    /**
-     * schemaType of schema registry to produce
-     */
-    @Getter
-    @NonNull
-    private final String schemaType;
 
     /**
      * subject of schema registry to produce
@@ -121,20 +116,22 @@ public abstract class AbstractSchemaRegistrySchema<T, S extends ParsedSchema> im
                 );
         RestService restService = new RestService(schemaRegistryUrl);
         restService.configure(restConfigs);
-
+        Class<?> clazz = getClass();
+        Type[] types = null;
+        do {
+            ParameterizedType pt = (ParameterizedType) clazz.getGenericSuperclass();
+            clazz = (Class<?>) pt.getRawType();
+            types = pt.getActualTypeArguments();
+        } while (!AbstractSchemaRegistrySchema.class.equals(clazz));
         List<SchemaProvider> providers = new LinkedList<>();
-        switch (this.schemaType) {
-            case AvroSchema.TYPE:
-                providers.add(new AvroSchemaProvider());
-                break;
-            case ProtobufSchema.TYPE:
-                providers.add(new ProtobufSchemaProvider());
-                break;
-            case JsonSchema.TYPE:
-                providers.add(new JsonSchemaProvider());
-                break;
-            default:
-                throw new IllegalArgumentException("Unsupported schema type: " + this.schemaType);
+        if (AvroSchema.class.equals(types[1])) {
+            providers.add(new AvroSchemaProvider());
+        } else if (JsonSchema.class.equals(types[1])) {
+            providers.add(new JsonSchemaProvider());
+        } else if (ProtobufSchema.class.equals(types[1])) {
+            providers.add(new ProtobufSchemaProvider());
+        } else {
+            throw new IllegalArgumentException("Unsupported schema type: " + types[0]);
         }
         CachedSchemaRegistryClient client = new CachedSchemaRegistryClient(
                 restService,
@@ -155,7 +152,7 @@ public abstract class AbstractSchemaRegistrySchema<T, S extends ParsedSchema> im
                 (String) config.get(SslConfigs.SSL_ENDPOINT_IDENTIFICATION_ALGORITHM_CONFIG);
 
         if (sslEndpointIdentificationAlgo == null
-                || sslEndpointIdentificationAlgo.equals("none")
+                || "none".equals(sslEndpointIdentificationAlgo)
                 || sslEndpointIdentificationAlgo.isEmpty()) {
             return (hostname, session) -> true;
         }

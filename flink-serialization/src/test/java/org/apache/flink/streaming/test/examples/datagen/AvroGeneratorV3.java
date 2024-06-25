@@ -18,6 +18,7 @@
 
 package org.apache.flink.streaming.test.examples.datagen;
 
+import cn.hutool.core.util.TypeUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.confluent.avro.random.generator.Generator;
@@ -26,7 +27,6 @@ import io.confluent.connect.json.JsonSchemaData;
 import io.confluent.connect.json.JsonSchemaDataConfig;
 import io.confluent.kafka.schemaregistry.avro.AvroSchema;
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClientConfig;
-import io.confluent.kafka.schemaregistry.json.JsonSchema;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
@@ -44,11 +44,13 @@ import org.apache.flink.streaming.test.examples.entity.bo.TestData;
 import org.apache.kafka.common.config.SslConfigs;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.apache.kafka.connect.data.SchemaAndValue;
+import xyz.flink.serialization.AbstractSchemaRegistrySchema;
 import xyz.flink.serialization.SchemaRegistryAdaptiveJsonSerializationSchema;
 import xyz.flink.serialization.SchemaRegistryAvroSerializationSchema;
 import xyz.flink.serialization.SchemaRegistryJsonSerializationSchema;
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
@@ -64,6 +66,10 @@ public class AvroGeneratorV3 {
     private static final Random random = new Random();
 
     public static void main(String[] args) throws Exception {
+        Type actualType = TypeUtil.getActualType(
+                SchemaRegistryAdaptiveJsonSerializationSchema.class,
+                AbstractSchemaRegistrySchema.class
+        );
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironment();
         env.setParallelism(1);
         long maxRecords = 4000;
@@ -85,10 +91,9 @@ public class AvroGeneratorV3 {
                         .schemaRegistryUrl(schemaRegistryUrl)
                         .subject(valueSubject)
                         .configs(registryConfigs)
-                        .schemaType(AvroSchema.TYPE)
                         .key(false)
                         .build();
-        AvroSchema avroSchema = (AvroSchema) avroValueSchema.getSchema();
+        AvroSchema avroSchema = avroValueSchema.createSchema();
         SchemaRegistryAdaptiveJsonSerializationSchema keySchema = SchemaRegistryAdaptiveJsonSerializationSchema
                 .builder()
                 .type(Object.class)
@@ -96,7 +101,6 @@ public class AvroGeneratorV3 {
                 .subject("Test_Data-1-key.json")
                 .surSubject("Test_Data-1-value.json")
                 .configs(registryConfigs)
-                .schemaType(JsonSchema.TYPE)
                 .key(true)
                 .build();
         SchemaRegistryJsonSerializationSchema<TestData> valueSchema = SchemaRegistryJsonSerializationSchema
@@ -104,7 +108,6 @@ public class AvroGeneratorV3 {
                 .type(TestData.class)
                 .schemaRegistryUrl(schemaRegistryUrl)
                 .subject("Test_Data-1-value.json")
-                .schemaType(JsonSchema.TYPE)
                 .configs(registryConfigs)
                 .key(false)
                 .build();

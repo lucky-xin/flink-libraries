@@ -79,7 +79,6 @@ public class AvroGeneratorV2 {
                         .schemaRegistryUrl(schemaRegistryUrl)
                         .subject(keySubject)
                         .configs(registryConfigs)
-                        .schemaType(AvroSchema.TYPE)
                         .key(true)
                         .build();
         SchemaRegistryAvroSerializationSchema<GenericRecord> avroValueSchema =
@@ -88,7 +87,6 @@ public class AvroGeneratorV2 {
                         .schemaRegistryUrl(schemaRegistryUrl)
                         .subject(keySubject)
                         .configs(registryConfigs)
-                        .schemaType(AvroSchema.TYPE)
                         .key(false)
                         .build();
         AvroSchema schema = avroValueSchema.getSchema();
