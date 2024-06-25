@@ -2,6 +2,7 @@ package xyz.flink.serialization;
 
 import io.confluent.connect.json.JsonSchemaData;
 import io.confluent.connect.json.JsonSchemaDataConfig;
+import io.confluent.kafka.schemaregistry.json.JsonSchema;
 import io.confluent.kafka.serializers.json.KafkaJsonSchemaSerializer;
 import lombok.experimental.SuperBuilder;
 import org.apache.flink.api.common.serialization.SerializationSchema;
@@ -19,7 +20,7 @@ import java.io.IOException;
  */
 @SuperBuilder
 public class SchemaRegistryJsonSerializationSchema<T>
-        extends AbstractSchemaRegistrySchema<T> implements SerializationSchema<T> {
+        extends AbstractSchemaRegistrySchema<T, JsonSchema> implements SerializationSchema<T> {
     private static final long serialVersionUID = -1671641202177852775L;
 
     /**

@@ -1,10 +1,7 @@
 package xyz.flink.serialization;
 
 import io.confluent.connect.avro.AvroDataConfig;
-import io.confluent.kafka.schemaregistry.ParsedSchema;
 import io.confluent.kafka.schemaregistry.avro.AvroSchema;
-import io.confluent.kafka.schemaregistry.client.SchemaMetadata;
-import io.confluent.kafka.schemaregistry.client.rest.exceptions.RestClientException;
 import lombok.NonNull;
 import lombok.experimental.SuperBuilder;
 import org.apache.avro.AvroTypeException;
@@ -34,17 +31,17 @@ import java.io.IOException;
  * @since 2024-06-21
  */
 @SuperBuilder
-public class SchemaRegistryAdaptiveAvroSerializationSchema extends SchemaRegistryAvroSerializationSchema<Object> {
+public class SchemaRegistryAdaptiveAvroSerializationSchema
+        extends SchemaRegistryAvroSerializationSchema<Object> {
     private static final long serialVersionUID = -1671641202177852775L;
-
-    /**
-     * Writer that writes the serialized record to {@link ByteArrayOutputStream}.
-     */
-    private transient ParsedSchema surSchema;
 
     @NonNull
     private final String surSubject;
 
+    /**
+     * Writer that writes the serialized record to {@link ByteArrayOutputStream}.
+     */
+    private transient AvroSchema surSchema;
     /**
      * Writer that writes the serialized record to {@link ByteArrayOutputStream}.
      */
@@ -57,17 +54,8 @@ public class SchemaRegistryAdaptiveAvroSerializationSchema extends SchemaRegistr
             return;
         }
         super.checkInitialized();
-        try {
-            this.avroData = new AvroData(new AvroDataConfig(getConfigs()));
-            SchemaMetadata meta = this.getSchemaRegistryClient().getLatestSchemaMetadata(this.surSubject);
-            this.surSchema = this.getSchemaRegistryClient().parseSchema(
-                    meta.getSchemaType(),
-                    meta.getSchema(),
-                    meta.getReferences()
-            ).orElseThrow(() -> new IllegalStateException("Failed to parse schema"));
-        } catch (RestClientException e) {
-            throw new IOException("Failed to get schema from schema registry.", e);
-        }
+        this.avroData = new AvroData(new AvroDataConfig(getConfigs()));
+        this.surSchema = getSchema(this.surSubject);
     }
 
     @Override
@@ -77,13 +65,13 @@ public class SchemaRegistryAdaptiveAvroSerializationSchema extends SchemaRegistr
         }
         try {
             checkInitialized();
-            Schema surConnectSchema = this.avroData.toConnectSchema(((AvroSchema) this.surSchema).rawSchema());
+            Schema surConnectSchema = this.avroData.toConnectSchema(this.surSchema.rawSchema());
             if (surConnectSchema.type() != Schema.Type.STRUCT) {
                 throw new IllegalStateException("source schema type must be struct.");
             }
-            SchemaAndValue sav = this.avroData.toConnectData(((AvroSchema) this.surSchema).rawSchema(), origValue);
+            SchemaAndValue sav = this.avroData.toConnectData(this.surSchema.rawSchema(), origValue);
             Struct surStruct = (Struct) sav.value();
-            AvroSchema dstJsonSchema = (AvroSchema) getSchema();
+            AvroSchema dstJsonSchema = getSchema();
             Schema dstConnectSchema = this.avroData.toConnectSchema(dstJsonSchema.rawSchema());
             Struct dstStruct = new Struct(dstConnectSchema);
             for (Field field : dstConnectSchema.fields()) {

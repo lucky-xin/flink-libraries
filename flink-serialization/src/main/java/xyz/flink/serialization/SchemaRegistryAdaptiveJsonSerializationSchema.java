@@ -3,9 +3,6 @@ package xyz.flink.serialization;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.confluent.kafka.schemaregistry.ParsedSchema;
-import io.confluent.kafka.schemaregistry.client.SchemaMetadata;
-import io.confluent.kafka.schemaregistry.client.rest.exceptions.RestClientException;
 import io.confluent.kafka.schemaregistry.json.JsonSchema;
 import lombok.NonNull;
 import lombok.experimental.SuperBuilder;
@@ -32,7 +29,7 @@ public class SchemaRegistryAdaptiveJsonSerializationSchema extends SchemaRegistr
     /**
      * Writer that writes the serialized record to {@link ByteArrayOutputStream}.
      */
-    private transient ParsedSchema surSchema;
+    private transient JsonSchema surSchema;
 
     @NonNull
     private final String surSubject;
@@ -51,13 +48,13 @@ public class SchemaRegistryAdaptiveJsonSerializationSchema extends SchemaRegistr
                     jsonNode = payload;
                 }
             }
-            Schema surConnectSchema = this.jsonSchemaData.toConnectSchema((JsonSchema) this.surSchema);
+            Schema surConnectSchema = this.jsonSchemaData.toConnectSchema(this.surSchema);
             if (surConnectSchema.type() != Schema.Type.STRUCT) {
                 throw new IllegalStateException("source schema type must be struct.");
             }
 
             Struct surStruct = (Struct) this.jsonSchemaData.toConnectData(surConnectSchema, jsonNode);
-            JsonSchema dstJsonSchema = (JsonSchema) getSchema();
+            JsonSchema dstJsonSchema = getSchema();
             Schema dstConnectSchema = this.jsonSchemaData.toConnectSchema(dstJsonSchema);
             List<Field> fields = dstConnectSchema.fields();
             Struct dstStruct = new Struct(dstConnectSchema);
@@ -68,7 +65,7 @@ public class SchemaRegistryAdaptiveJsonSerializationSchema extends SchemaRegistr
             }
             JsonNode dstValueValue = this.jsonSchemaData.fromConnectData(dstConnectSchema, dstStruct);
             ObjectNode result = JsonNodeFactory.instance.objectNode();
-            result.set("schema", ((JsonSchema) this.surSchema).toJsonNode());
+            result.set("schema", this.surSchema.toJsonNode());
             result.set("payload", dstValueValue);
             return super.serialize(result);
         } catch (IOException e) {
@@ -82,16 +79,7 @@ public class SchemaRegistryAdaptiveJsonSerializationSchema extends SchemaRegistr
             return;
         }
         super.checkInitialized();
-        try {
-            SchemaMetadata meta = this.getSchemaRegistryClient().getLatestSchemaMetadata(this.surSubject);
-            this.surSchema = this.getSchemaRegistryClient().parseSchema(
-                    meta.getSchemaType(),
-                    meta.getSchema(),
-                    meta.getReferences()
-            ).orElseThrow(() -> new IllegalStateException("Failed to parse schema"));
-        } catch (RestClientException e) {
-            throw new IOException("Failed to get schema from schema registry.", e);
-        }
+        this.surSchema = getSchema(this.surSubject);
     }
 
     @Override

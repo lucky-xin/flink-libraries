@@ -1,6 +1,5 @@
 package xyz.flink.serialization;
 
-import io.confluent.kafka.schemaregistry.ParsedSchema;
 import io.confluent.kafka.schemaregistry.avro.AvroSchema;
 import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import lombok.experimental.SuperBuilder;
@@ -21,7 +20,8 @@ import java.io.IOException;
  * @since 2024-06-21
  */
 @SuperBuilder
-public class SchemaRegistryAvroDeserializationSchema<T> extends AbstractSchemaRegistrySchema<T> implements DeserializationSchema<T> {
+public class SchemaRegistryAvroDeserializationSchema<T>
+        extends AbstractSchemaRegistrySchema<T, AvroSchema> implements DeserializationSchema<T> {
     private static final long serialVersionUID = -1671641202177852775L;
 
     private transient KafkaAvroDeserializer deserializer;
@@ -52,7 +52,7 @@ public class SchemaRegistryAvroDeserializationSchema<T> extends AbstractSchemaRe
     }
 
     @Override
-    public ParsedSchema createSchema() throws IOException {
+    public AvroSchema createSchema() throws IOException {
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
         if (SpecificRecord.class.isAssignableFrom(getType())) {
             @SuppressWarnings("unchecked")

@@ -52,7 +52,7 @@ import static io.confluent.kafka.serializers.json.KafkaJsonSchemaDeserializerCon
  * @since 2024-06-21
  */
 @SuperBuilder
-public abstract class AbstractSchemaRegistrySchema<T> implements Serializable, Closeable {
+public abstract class AbstractSchemaRegistrySchema<T, S extends ParsedSchema> implements Serializable, Closeable {
     private static final long serialVersionUID = -1671641202177852775L;
 
     protected static final byte MAGIC_BYTE = 0x0;
@@ -103,7 +103,7 @@ public abstract class AbstractSchemaRegistrySchema<T> implements Serializable, C
     private final boolean key;
 
     @Getter
-    private transient ParsedSchema schema;
+    private transient S schema;
 
     @Getter
     private transient CachedSchemaRegistryClient schemaRegistryClient;
@@ -215,13 +215,23 @@ public abstract class AbstractSchemaRegistrySchema<T> implements Serializable, C
      *
      * @return
      */
-    public ParsedSchema createSchema() throws IOException {
+    public S createSchema() throws IOException {
+        return getSchema(this.subject);
+    }
+
+    /**
+     * 创建Schema
+     *
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public <E extends ParsedSchema> E getSchema(String subject) throws IOException {
         try {
             if (this.schemaRegistryClient == null) {
                 this.schemaRegistryClient = createSchemaRegistryClient();
             }
-            SchemaMetadata metadata = this.schemaRegistryClient.getLatestSchemaMetadata(this.subject);
-            return this.schemaRegistryClient.parseSchema(
+            SchemaMetadata metadata = this.schemaRegistryClient.getLatestSchemaMetadata(subject);
+            return (E) this.schemaRegistryClient.parseSchema(
                             metadata.getSchemaType(),
                             metadata.getSchema(),
                             metadata.getReferences()
