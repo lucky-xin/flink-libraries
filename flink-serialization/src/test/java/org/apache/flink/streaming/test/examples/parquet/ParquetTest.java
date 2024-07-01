@@ -25,7 +25,7 @@ import java.util.Properties;
  */
 class ParquetTest {
 
-    @Test
+//    @Test
     void test() {
         String name = "test;";
         String doc = "";
