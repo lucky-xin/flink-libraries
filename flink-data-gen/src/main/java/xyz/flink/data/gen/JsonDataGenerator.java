@@ -210,7 +210,7 @@ public class JsonDataGenerator {
      * Creates a generator out of an already-parsed {@link Schema}.
      *
      * @param schema The schema to generate values for.
-     * @param random         The object to use for generating randomness when producing values.
+     * @param random The object to use for generating randomness when producing values.
      */
     public JsonDataGenerator(Schema schema, Random random) {
         this.schema = schema;
@@ -275,10 +275,8 @@ public class JsonDataGenerator {
 
     @SuppressWarnings("unchecked")
     private Object generateEmpty(EmptySchema schema) {
-        Map<String, Object> properties = schema.getUnprocessedProperties();
-        List<Map<String, Object>> prefixItems = (List<Map<String, Object>>) properties.get("prefixItems");
-        if (prefixItems != null) {
-            return generatePrefixItems(prefixItems);
+        if (schema.getUnprocessedProperties().containsKey("prefixItems")) {
+            return generatePrefixItems(schema);
         }
         return null;
     }
@@ -293,9 +291,8 @@ public class JsonDataGenerator {
 
     @SuppressWarnings("unchecked")
     private Object generateTrueOrFalse(Schema schema) {
-        List<Map<String, Object>> prefixItems = (List<Map<String, Object>>) schema.getUnprocessedProperties().get("prefixItems");
-        if (prefixItems != null) {
-            return generatePrefixItems(prefixItems);
+        if (schema.getUnprocessedProperties().containsKey("prefixItems")) {
+            return generatePrefixItems(schema);
         }
         return schema.toString();
     }
@@ -392,18 +389,31 @@ public class JsonDataGenerator {
 
     @SuppressWarnings("unchecked")
     private JSONArray generateArray(ArraySchema schema) {
-        int length = RandomUtil.randomInt(
-                Optional.ofNullable(schema.getMinItems()).orElse(1),
-                Optional.ofNullable(schema.getMaxItems()).orElse(4)
-        );
         Map<String, Object> properties = schema.getUnprocessedProperties();
+        if (properties.containsKey("prefixItems")) {
+            return generatePrefixItems(schema);
+        }
         Integer minContains = Optional.ofNullable(properties.get("minContains"))
                 .map(t -> (Integer) t)
                 .orElse(0);
         Integer maxContains = Optional.ofNullable(properties.get("maxContains"))
                 .map(t -> (Integer) t)
                 .orElse(2);
+        Schema contains = Optional.ofNullable(properties.get("contains"))
+                .map(t -> new JSONObject(((Map<String, Object>) t)))
+                .map(SchemaLoader::load)
+                .orElse(null);
         boolean uniqueItems = schema.needsUniqueItems();
+        if (contains != null) {
+            return generateContains(minContains, maxContains, uniqueItems, contains);
+        }
+
+        int length = RandomUtil.randomInt(
+                Optional.ofNullable(schema.getMinItems()).orElse(1),
+                Optional.ofNullable(schema.getMaxItems()).orElse(4)
+        );
+
+
         JSONArray result = new JSONArray();
         if (schema.getAllItemSchema() != null) {
             for (int i = 0; i < length; i++) {
@@ -413,27 +423,27 @@ public class JsonDataGenerator {
         } else if (schema.getContainedItemSchema() != null) {
             return generateContains(minContains, maxContains, uniqueItems, schema.getContainedItemSchema());
         }
-        List<Map<String, Object>> prefixItems = (List<Map<String, Object>>) properties.get("prefixItems");
-        if (prefixItems != null) {
-            return generatePrefixItems(prefixItems);
-        }
-        Schema contains = Optional.ofNullable(properties.get("contains"))
-                .map(t -> new JSONObject(((Map<String, Object>) t)))
-                .map(SchemaLoader::load)
-                .orElse(null);
-        if (contains != null) {
-            return generateContains(minContains, maxContains, uniqueItems, contains);
-        }
+
         return result;
     }
 
-    private JSONArray generatePrefixItems(List<Map<String, Object>> prefixItems) {
+    @SuppressWarnings("unchecked")
+    private JSONArray generatePrefixItems(Schema schema) {
+        Map<String, Object> properties = schema.getUnprocessedProperties();
+        List<Map<String, Object>> prefixItems = (List<Map<String, Object>>) properties.get("prefixItems");
         JSONArray array = new JSONArray(prefixItems.size());
         prefixItems.stream()
                 .map(JSONObject::new)
                 .map(SchemaLoader::load)
                 .map(this::generateObject)
                 .forEach(array::put);
+        if (schema instanceof ArraySchema) {
+            ArraySchema arraySchema = (ArraySchema) schema;
+            Schema allItemSchema = arraySchema.getAllItemSchema();
+            if (allItemSchema != null && !(allItemSchema instanceof FalseSchema)) {
+                array.put(generateObject(allItemSchema));
+            }
+        }
         return array;
     }
 
