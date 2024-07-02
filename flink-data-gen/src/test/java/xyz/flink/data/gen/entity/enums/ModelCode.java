@@ -1,4 +1,4 @@
-package org.apache.flink.streaming.test.examples.entity.enums;
+package xyz.flink.data.gen.entity.enums;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import lombok.AllArgsConstructor;

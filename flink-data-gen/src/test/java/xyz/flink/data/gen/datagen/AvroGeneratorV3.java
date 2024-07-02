@@ -16,9 +16,8 @@
  * limitations under the License.
  */
 
-package org.apache.flink.streaming.test.examples.datagen;
+package xyz.flink.data.gen.datagen;
 
-import cn.hutool.core.util.TypeUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.confluent.avro.random.generator.Generator;
@@ -40,17 +39,15 @@ import org.apache.flink.connector.kafka.sink.KafkaRecordSerializationSchema;
 import org.apache.flink.connector.kafka.sink.KafkaSink;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.test.examples.entity.bo.TestData;
 import org.apache.kafka.common.config.SslConfigs;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.apache.kafka.connect.data.SchemaAndValue;
-import xyz.flink.serialization.AbstractSchemaRegistrySchema;
+import xyz.flink.data.gen.entity.bo.TestData;
 import xyz.flink.serialization.SchemaRegistryAdaptiveJsonSerializationSchema;
 import xyz.flink.serialization.SchemaRegistryAvroSerializationSchema;
 import xyz.flink.serialization.SchemaRegistryJsonSerializationSchema;
 
 import java.io.Serializable;
-import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Random;

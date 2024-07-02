@@ -1,4 +1,4 @@
-package org.apache.flink.streaming.test.examples.entity.bo;
+package xyz.flink.data.gen.entity.bo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

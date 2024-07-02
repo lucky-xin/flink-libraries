@@ -1,4 +1,4 @@
-package org.apache.flink.streaming.test.examples.parquet;
+package xyz.flink.data.gen.parquet;
 
 import com.fasterxml.jackson.databind.node.IntNode;
 import com.fasterxml.jackson.databind.node.TextNode;
@@ -13,7 +13,6 @@ import org.apache.flink.core.fs.Path;
 import org.apache.flink.formats.parquet.avro.AvroParquetReaders;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Properties;

@@ -58,12 +58,15 @@
         <fastjson2.version>2.0.50</fastjson2.version>
         <hutool.version>5.8.28</hutool.version>
         <confluent.coonnect.version>7.6.0</confluent.coonnect.version>
+        <jcuda.version>10.0.0</jcuda.version>
+        <xyz.flink.libraries.version>1.19.0</xyz.flink.libraries.version>
         <!--        <skipTests>true</skipTests>-->
     </properties>
 
     <modules>
         <module>flink-cep</module>
         <module>flink-serialization</module>
+        <module>flink-data-gen</module>
     </modules>
     <dependencyManagement>
         <dependencies>
@@ -1031,6 +1034,21 @@
                 <groupId>io.confluent.avro</groupId>
                 <artifactId>avro-random-generator</artifactId>
                 <version>0.4.1</version>
+            </dependency>
+            <dependency>
+                <groupId>xyz.flink</groupId>
+                <artifactId>flink-cep</artifactId>
+                <version>${xyz.flink.libraries.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>xyz.flink</groupId>
+                <artifactId>flink-data-gen</artifactId>
+                <version>${xyz.flink.libraries.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>xyz.flink</groupId>
+                <artifactId>flink-serialization</artifactId>
+                <version>${xyz.flink.libraries.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

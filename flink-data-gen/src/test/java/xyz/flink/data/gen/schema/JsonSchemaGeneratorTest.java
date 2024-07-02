@@ -1,4 +1,4 @@
-package org.apache.flink.streaming.test.examples.schema;
+package xyz.flink.data.gen.schema;
 
 import cn.hutool.core.io.IoUtil;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -12,13 +12,13 @@ import io.confluent.connect.json.JsonSchemaData;
 import io.confluent.connect.json.JsonSchemaDataConfig;
 import io.confluent.connect.schema.AbstractDataConfig;
 import io.confluent.kafka.schemaregistry.json.JsonSchema;
-import org.apache.flink.streaming.test.examples.entity.bo.TestData;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.Values;
 import org.junit.jupiter.api.Test;
 import scala.collection.immutable.HashMap;
 import scala.collection.immutable.HashSet;
 import xyz.avro.AvroData;
+import xyz.flink.data.gen.entity.bo.TestData;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -107,7 +107,6 @@ class JsonSchemaGeneratorTest {
                 AUTO_REGISTER_SCHEMAS, false,
                 USE_LATEST_VERSION, true
         )));
-        org.apache.log4j.Level level;
         AvroData avroData = new AvroData(new AvroDataConfig(
                 Map.of(
                         AbstractDataConfig.SCHEMAS_CACHE_SIZE_CONFIG, 1000,

@@ -2,7 +2,6 @@ package xyz.flink.serialization;
 
 import com.google.protobuf.Message;
 import io.confluent.kafka.schemaregistry.protobuf.ProtobufSchema;
-import io.confluent.kafka.serializers.json.KafkaJsonSchemaDeserializer;
 import io.confluent.kafka.serializers.protobuf.KafkaProtobufDeserializer;
 import lombok.experimental.SuperBuilder;
 import org.apache.flink.api.common.serialization.DeserializationSchema;

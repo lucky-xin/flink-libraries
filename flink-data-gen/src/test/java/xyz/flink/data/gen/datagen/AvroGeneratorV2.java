@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.apache.flink.streaming.test.examples.datagen;
+package xyz.flink.data.gen.datagen;
 
 import io.confluent.avro.random.generator.Generator;
 import io.confluent.kafka.schemaregistry.avro.AvroSchema;
