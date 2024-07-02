@@ -110,6 +110,14 @@
                 <version>${flink.hadoop.version}</version>
                 <exclusions>
                     <exclusion>
+                        <groupId>org.apache.hadoop</groupId>
+                        <artifactId>hadoop-auth</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>zookeeper</artifactId>
+                        <groupId>org.apache.zookeeper</groupId>
+                    </exclusion>
+                    <exclusion>
                         <groupId>jdk.tools</groupId>
                         <artifactId>jdk.tools</artifactId>
                     </exclusion>
@@ -120,6 +128,38 @@
                     <exclusion>
                         <groupId>org.slf4j</groupId>
                         <artifactId>slf4j-log4j12</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>guava</artifactId>
+                        <groupId>com.google.guava</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>nimbus-jose-jwt</artifactId>
+                        <groupId>com.nimbusds</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>re2j</artifactId>
+                        <groupId>com.google.re2j</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>stax2-api</artifactId>
+                        <groupId>org.codehaus.woodstox</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.parquet</groupId>
+                <artifactId>parquet-avro</artifactId>
+                <version>${parquet.version}</version>
+                <scope>provided</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.hadoop</groupId>
+                        <artifactId>hadoop-client</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>it.unimi.dsi</groupId>
+                        <artifactId>fastutil</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -691,6 +731,10 @@
                         <groupId>io.confluent</groupId>
                         <artifactId>kafka-schema-registry-client</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <artifactId>guava</artifactId>
+                        <groupId>com.google.guava</groupId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
@@ -753,10 +797,6 @@
                         <groupId>org.apache.avro</groupId>
                     </exclusion>
                     <exclusion>
-                        <artifactId>slf4j-log4j12</artifactId>
-                        <groupId>org.slf4j</groupId>
-                    </exclusion>
-                    <exclusion>
                         <artifactId>lz4-java</artifactId>
                         <groupId>org.lz4</groupId>
                     </exclusion>
@@ -792,6 +832,10 @@
                         <artifactId>checker-qual</artifactId>
                         <groupId>org.checkerframework</groupId>
                     </exclusion>
+                    <exclusion>
+                        <artifactId>guava</artifactId>
+                        <groupId>com.google.guava</groupId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
@@ -818,12 +862,16 @@
                         <artifactId>kafka-schema-registry-client</artifactId>
                     </exclusion>
                     <exclusion>
-                        <groupId>org.slf4j</groupId>
-                        <artifactId>slf4j-api</artifactId>
-                    </exclusion>
-                    <exclusion>
                         <groupId>com.kjetland</groupId>
                         <artifactId>mbknor-jackson-jsonschema_2.13</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>guava</artifactId>
+                        <groupId>com.google.guava</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>kotlin-stdlib</artifactId>
+                        <groupId>org.jetbrains.kotlin</groupId>
                     </exclusion>
                 </exclusions>
                 <version>${confluent.coonnect.version}</version>
@@ -835,6 +883,14 @@
                     <exclusion>
                         <groupId>io.confluent</groupId>
                         <artifactId>kafka-schema-registry-client</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>protobuf-java</artifactId>
+                        <groupId>com.google.protobuf</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>kotlin-stdlib</artifactId>
+                        <groupId>org.jetbrains.kotlin</groupId>
                     </exclusion>
                 </exclusions>
                 <version>${confluent.coonnect.version}</version>
@@ -858,6 +914,10 @@
                         <groupId>io.confluent</groupId>
                         <artifactId>kafka-schema-registry-client</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <artifactId>guava</artifactId>
+                        <groupId>com.google.guava</groupId>
+                    </exclusion>
                 </exclusions>
                 <version>${confluent.coonnect.version}</version>
             </dependency>
@@ -866,8 +926,44 @@
                 <artifactId>kafka-protobuf-provider</artifactId>
                 <exclusions>
                     <exclusion>
+                        <artifactId>okio-jvm</artifactId>
+                        <groupId>com.squareup.okio</groupId>
+                    </exclusion>
+                    <exclusion>
                         <groupId>io.confluent</groupId>
                         <artifactId>kafka-schema-registry-client</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>annotations</artifactId>
+                        <groupId>org.jetbrains</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>error_prone_annotations</artifactId>
+                        <groupId>com.google.errorprone</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>gson</artifactId>
+                        <groupId>com.google.code.gson</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>guava</artifactId>
+                        <groupId>com.google.guava</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>j2objc-annotations</artifactId>
+                        <groupId>com.google.j2objc</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>kotlin-stdlib-common</artifactId>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>kotlin-stdlib-jdk8</artifactId>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>protobuf-java</artifactId>
+                        <groupId>com.google.protobuf</groupId>
                     </exclusion>
                 </exclusions>
                 <version>${confluent.coonnect.version}</version>
@@ -879,6 +975,18 @@
                 <exclusions>
                     <exclusion>
                         <artifactId>kotlin-scripting-jvm</artifactId>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>kotlin-scripting-common</artifactId>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>kotlin-scripting-compiler-embeddable</artifactId>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>kotlin-stdlib</artifactId>
                         <groupId>org.jetbrains.kotlin</groupId>
                     </exclusion>
                 </exclusions>

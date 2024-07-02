@@ -107,6 +107,7 @@ class JsonSchemaGeneratorTest {
                 AUTO_REGISTER_SCHEMAS, false,
                 USE_LATEST_VERSION, true
         )));
+        org.apache.log4j.Level level;
         AvroData avroData = new AvroData(new AvroDataConfig(
                 Map.of(
                         AbstractDataConfig.SCHEMAS_CACHE_SIZE_CONFIG, 1000,
