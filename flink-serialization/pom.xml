@@ -25,7 +25,7 @@ under the License.
     <parent>
         <groupId>xyz.flink</groupId>
         <artifactId>flink-libraries</artifactId>
-        <version>1.19.0</version>
+        <version>1.20.1</version>
     </parent>
 
     <artifactId>flink-serialization</artifactId>
