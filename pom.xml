@@ -7,14 +7,14 @@
 
     <groupId>xyz.flink</groupId>
     <artifactId>flink-libraries</artifactId>
-    <version>1.19.0</version>
+    <version>1.20.1</version>
 
     <name>Flink : Libraries :</name>
     <packaging>pom</packaging>
 
     <properties>
         <japicmp.skip>true</japicmp.skip>
-        <target.java.version>11</target.java.version>
+        <target.java.version>17</target.java.version>
         <maven.compiler.source>${target.java.version}</maven.compiler.source>
         <maven.compiler.target>${target.java.version}</maven.compiler.target>
         <spotless.license.header/>
@@ -28,14 +28,14 @@
         </flink.surefire.baseArgLine>
         <flink.shaded.version>17.0</flink.shaded.version>
         <flink.shaded.jackson.version>2.14.2</flink.shaded.jackson.version>
-        <flink.version>1.19.0</flink.version>
+        <flink.version>1.20.1</flink.version>
+        <xyz.flink.libraries.version>1.20.1</xyz.flink.libraries.version>
         <slf4j.version>1.7.36</slf4j.version>
         <log4j.version>2.17.1</log4j.version>
         <flink.hadoop.version>3.4.0</flink.hadoop.version>
         <zookeeper.version>3.8.1</zookeeper.version>
         <lz4.version>1.8.0</lz4.version>
-        <parquet.version>1.13.1</parquet.version>
-        <avro.version>1.11.3</avro.version>
+        <avro.version>1.11.4</avro.version>
         <hamcrest.version>1.3</hamcrest.version>
         <jackson-bom.version>2.15.3</jackson-bom.version>
         <javax.activation.api.version>1.2.0</javax.activation.api.version>
@@ -54,19 +54,19 @@
         <mockito.version>3.4.6</mockito.version>
         <powermock.version>2.0.9</powermock.version>
         <hamcrest.version>1.3</hamcrest.version>
-        <kafka.version>3.6.2</kafka.version>
+        <kafka.version>3.9.0</kafka.version>
         <fastjson2.version>2.0.50</fastjson2.version>
         <hutool.version>5.8.28</hutool.version>
         <confluent.coonnect.version>7.6.0</confluent.coonnect.version>
+        <parquet.version>1.16.0</parquet.version>
         <jcuda.version>10.0.0</jcuda.version>
-        <xyz.flink.libraries.version>1.19.0</xyz.flink.libraries.version>
         <!--        <skipTests>true</skipTests>-->
     </properties>
 
     <modules>
         <module>flink-cep</module>
-        <module>flink-serialization</module>
         <module>flink-data-gen</module>
+        <module>flink-serialization</module>
     </modules>
     <dependencyManagement>
         <dependencies>
@@ -113,18 +113,6 @@
                 <version>${flink.hadoop.version}</version>
                 <exclusions>
                     <exclusion>
-                        <artifactId>slf4j-reload4j</artifactId>
-                        <groupId>org.slf4j</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.apache.hadoop</groupId>
-                        <artifactId>hadoop-auth</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>zookeeper</artifactId>
-                        <groupId>org.apache.zookeeper</groupId>
-                    </exclusion>
-                    <exclusion>
                         <groupId>jdk.tools</groupId>
                         <artifactId>jdk.tools</artifactId>
                     </exclusion>
@@ -135,50 +123,6 @@
                     <exclusion>
                         <groupId>org.slf4j</groupId>
                         <artifactId>slf4j-log4j12</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>guava</artifactId>
-                        <groupId>com.google.guava</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>nimbus-jose-jwt</artifactId>
-                        <groupId>com.nimbusds</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>re2j</artifactId>
-                        <groupId>com.google.re2j</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>stax2-api</artifactId>
-                        <groupId>org.codehaus.woodstox</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.bouncycastle</groupId>
-                        <artifactId>bcprov-jdk15on</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>commons-collections</groupId>
-                        <artifactId>commons-collections</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>commons-configuration</groupId>
-                        <artifactId>commons-configuration2</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.parquet</groupId>
-                <artifactId>parquet-avro</artifactId>
-                <version>${parquet.version}</version>
-                <scope>provided</scope>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.hadoop</groupId>
-                        <artifactId>hadoop-client</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>it.unimi.dsi</groupId>
-                        <artifactId>fastutil</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -233,6 +177,44 @@
                     <exclusion>
                         <groupId>org.slf4j</groupId>
                         <artifactId>slf4j-reload4j</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.hadoop</groupId>
+                <artifactId>hadoop-yarn-common</artifactId>
+                <version>${flink.hadoop.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>jdk.tools</groupId>
+                        <artifactId>jdk.tools</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-log4j12</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.hadoop</groupId>
+                <artifactId>hadoop-yarn-client</artifactId>
+                <version>${flink.hadoop.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>jdk.tools</groupId>
+                        <artifactId>jdk.tools</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-log4j12</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -709,16 +691,8 @@
                 <version>${confluent.coonnect.version}</version>
                 <exclusions>
                     <exclusion>
-                        <artifactId>guava</artifactId>
-                        <groupId>com.google.guava</groupId>
-                    </exclusion>
-                    <exclusion>
                         <groupId>io.confluent</groupId>
                         <artifactId>kafka-schema-registry-client</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>guava</artifactId>
-                        <groupId>com.google.guava</groupId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -766,8 +740,8 @@
                 <version>${confluent.coonnect.version}</version>
                 <exclusions>
                     <exclusion>
-                        <artifactId>guava</artifactId>
-                        <groupId>com.google.guava</groupId>
+                        <artifactId>protobuf-java</artifactId>
+                        <groupId>com.google.protobuf</groupId>
                     </exclusion>
                     <exclusion>
                         <artifactId>okio-jvm</artifactId>
@@ -784,6 +758,10 @@
                     <exclusion>
                         <artifactId>avro</artifactId>
                         <groupId>org.apache.avro</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>slf4j-log4j12</artifactId>
+                        <groupId>org.slf4j</groupId>
                     </exclusion>
                     <exclusion>
                         <artifactId>lz4-java</artifactId>
@@ -821,18 +799,6 @@
                         <artifactId>checker-qual</artifactId>
                         <groupId>org.checkerframework</groupId>
                     </exclusion>
-                    <exclusion>
-                        <artifactId>guava</artifactId>
-                        <groupId>com.google.guava</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.yaml</groupId>
-                        <artifactId>snakeyaml</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.apache.kafka</groupId>
-                        <artifactId>kafka-clients</artifactId>
-                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
@@ -859,20 +825,12 @@
                         <artifactId>kafka-schema-registry-client</artifactId>
                     </exclusion>
                     <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-api</artifactId>
+                    </exclusion>
+                    <exclusion>
                         <groupId>com.kjetland</groupId>
                         <artifactId>mbknor-jackson-jsonschema_2.13</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>guava</artifactId>
-                        <groupId>com.google.guava</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>kotlin-stdlib</artifactId>
-                        <groupId>org.jetbrains.kotlin</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>commons-collections</groupId>
-                        <artifactId>commons-collections</artifactId>
                     </exclusion>
                 </exclusions>
                 <version>${confluent.coonnect.version}</version>
@@ -884,14 +842,6 @@
                     <exclusion>
                         <groupId>io.confluent</groupId>
                         <artifactId>kafka-schema-registry-client</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>protobuf-java</artifactId>
-                        <groupId>com.google.protobuf</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>kotlin-stdlib</artifactId>
-                        <groupId>org.jetbrains.kotlin</groupId>
                     </exclusion>
                 </exclusions>
                 <version>${confluent.coonnect.version}</version>
@@ -912,16 +862,8 @@
                 <artifactId>kafka-connect-avro-converter</artifactId>
                 <exclusions>
                     <exclusion>
-                        <artifactId>guava</artifactId>
-                        <groupId>com.google.guava</groupId>
-                    </exclusion>
-                    <exclusion>
                         <groupId>io.confluent</groupId>
                         <artifactId>kafka-schema-registry-client</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>guava</artifactId>
-                        <groupId>com.google.guava</groupId>
                     </exclusion>
                 </exclusions>
                 <version>${confluent.coonnect.version}</version>
@@ -931,48 +873,8 @@
                 <artifactId>kafka-protobuf-provider</artifactId>
                 <exclusions>
                     <exclusion>
-                        <artifactId>guava</artifactId>
-                        <groupId>com.google.guava</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>okio-jvm</artifactId>
-                        <groupId>com.squareup.okio</groupId>
-                    </exclusion>
-                    <exclusion>
                         <groupId>io.confluent</groupId>
                         <artifactId>kafka-schema-registry-client</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>annotations</artifactId>
-                        <groupId>org.jetbrains</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>error_prone_annotations</artifactId>
-                        <groupId>com.google.errorprone</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>gson</artifactId>
-                        <groupId>com.google.code.gson</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>guava</artifactId>
-                        <groupId>com.google.guava</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>j2objc-annotations</artifactId>
-                        <groupId>com.google.j2objc</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>kotlin-stdlib-common</artifactId>
-                        <groupId>org.jetbrains.kotlin</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>kotlin-stdlib-jdk8</artifactId>
-                        <groupId>org.jetbrains.kotlin</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>protobuf-java</artifactId>
-                        <groupId>com.google.protobuf</groupId>
                     </exclusion>
                 </exclusions>
                 <version>${confluent.coonnect.version}</version>
@@ -984,18 +886,6 @@
                 <exclusions>
                     <exclusion>
                         <artifactId>kotlin-scripting-jvm</artifactId>
-                        <groupId>org.jetbrains.kotlin</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>kotlin-scripting-common</artifactId>
-                        <groupId>org.jetbrains.kotlin</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>kotlin-scripting-compiler-embeddable</artifactId>
-                        <groupId>org.jetbrains.kotlin</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>kotlin-stdlib</artifactId>
                         <groupId>org.jetbrains.kotlin</groupId>
                     </exclusion>
                 </exclusions>
@@ -1040,21 +930,6 @@
                 <groupId>io.confluent.avro</groupId>
                 <artifactId>avro-random-generator</artifactId>
                 <version>0.4.1</version>
-            </dependency>
-            <dependency>
-                <groupId>xyz.flink</groupId>
-                <artifactId>flink-cep</artifactId>
-                <version>${xyz.flink.libraries.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>xyz.flink</groupId>
-                <artifactId>flink-data-gen</artifactId>
-                <version>${xyz.flink.libraries.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>xyz.flink</groupId>
-                <artifactId>flink-serialization</artifactId>
-                <version>${xyz.flink.libraries.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -1104,16 +979,6 @@
             <artifactId>jna</artifactId>
         </dependency>
     </dependencies>
-    <distributionManagement>
-        <repository>
-            <id>maven-releases</id>
-            <url>https://gzv-nex.piston.ink/repository/maven-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>maven-snapshots</id>
-            <url>https://gzv-nex.piston.ink/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
     <build>
         <plugins>
             <!-- Scala Compiler -->

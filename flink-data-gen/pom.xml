@@ -6,13 +6,12 @@
     <parent>
         <groupId>xyz.flink</groupId>
         <artifactId>flink-libraries</artifactId>
-        <version>1.19.0</version>
+        <version>1.20.1</version>
     </parent>
 
     <artifactId>flink-data-gen</artifactId>
 
     <name>Flink : Data Gen</name>
-
     <packaging>jar</packaging>
 
 
