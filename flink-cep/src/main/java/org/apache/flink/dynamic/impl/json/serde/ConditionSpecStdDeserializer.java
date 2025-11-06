@@ -17,6 +17,7 @@ import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -26,8 +27,11 @@ import java.util.List;
  */
 public class ConditionSpecStdDeserializer extends StdDeserializer<ConditionSpec> {
 
-    public static final ConditionSpecStdDeserializer INSTANCE = new ConditionSpecStdDeserializer();
+    @Serial
     private static final long serialVersionUID = 1L;
+
+    public static final ConditionSpecStdDeserializer INSTANCE = new ConditionSpecStdDeserializer();
+
     public ConditionSpecStdDeserializer() {
         super(ConditionSpec.class);
     }

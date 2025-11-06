@@ -13,6 +13,7 @@ import org.apache.kafka.common.errors.InvalidConfigurationException;
 import org.apache.kafka.common.errors.SerializationException;
 
 import java.io.IOException;
+import java.io.Serial;
 
 /**
  * SchemaRegistryAvroSerializationSchema
@@ -24,6 +25,7 @@ import java.io.IOException;
 @SuperBuilder
 public class SchemaRegistryAvroSerializationSchema<T>
         extends AbstractSchemaRegistrySchema<T, AvroSchema> implements SerializationSchema<T> {
+    @Serial
     private static final long serialVersionUID = -1671641202177852775L;
 
     private transient Serializer serializer;

@@ -12,6 +12,7 @@ import org.apache.kafka.connect.data.Schema;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.Serial;
 
 /**
  * SchemaRegistryJsonSerializationSchema
@@ -23,6 +24,7 @@ import java.io.IOException;
 @SuperBuilder
 public class SchemaRegistryProtobufSerializationSchema<T extends Message>
         extends AbstractSchemaRegistrySchema<T, ProtobufSchema> implements SerializationSchema<T> {
+    @Serial
     private static final long serialVersionUID = -1671641202177852775L;
 
     /**

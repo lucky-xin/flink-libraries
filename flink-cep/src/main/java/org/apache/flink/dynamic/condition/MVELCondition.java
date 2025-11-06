@@ -7,6 +7,7 @@ import org.apache.flink.util.StringUtils;
 import org.mvel2.MVEL;
 
 import javax.annotation.Nullable;
+import java.io.Serial;
 import java.io.Serializable;
 
 import static java.util.Objects.requireNonNull;
@@ -19,6 +20,7 @@ import static java.util.Objects.requireNonNull;
 @Internal
 public class MVELCondition<T> extends SimpleCondition<T> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

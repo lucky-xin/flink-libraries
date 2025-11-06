@@ -8,6 +8,7 @@ import org.apache.flink.cep.pattern.conditions.SimpleCondition;
 import org.apache.flink.util.StringUtils;
 
 import javax.annotation.Nullable;
+import java.io.Serial;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +24,7 @@ import static java.util.Objects.requireNonNull;
 @Internal
 public class AviatorCondition<T> extends SimpleCondition<T> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

@@ -11,6 +11,8 @@ import org.apache.flink.streaming.api.operators.StreamOperator;
 import org.apache.flink.streaming.api.operators.StreamOperatorParameters;
 import org.apache.flink.streaming.runtime.tasks.ProcessingTimeServiceAware;
 
+import java.io.Serial;
+
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
@@ -21,6 +23,7 @@ public class DynamicCepOperatorFactory<IN, OUT> extends AbstractStreamOperatorFa
         CoordinatedOperatorFactory<OUT>,
         ProcessingTimeServiceAware {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private final PatternProcessorDiscovererFactory<IN> discovererFactory;

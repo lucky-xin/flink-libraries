@@ -7,6 +7,7 @@ import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.time.Duration;
 
 /**
@@ -14,8 +15,10 @@ import java.time.Duration;
  */
 public class PatternTimesStdDeserializer extends StdDeserializer<Quantifier.Times> {
 
-    public static final PatternTimesStdDeserializer INSTANCE = new PatternTimesStdDeserializer();
+    @Serial
     private static final long serialVersionUID = 1L;
+
+    public static final PatternTimesStdDeserializer INSTANCE = new PatternTimesStdDeserializer();
 
     public PatternTimesStdDeserializer() {
         super(Quantifier.Times.class);

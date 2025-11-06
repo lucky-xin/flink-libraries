@@ -50,6 +50,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -77,9 +78,11 @@ public class DynamicCepOperator<IN, KEY, OUT> extends AbstractStreamOperator<OUT
         implements OneInputStreamOperator<IN, OUT>,
         Triggerable<KEY, VoidNamespace>,
         OperatorEventHandler {
-    private static final Logger LOG = LoggerFactory.getLogger(DynamicCepOperator.class);
 
+    @Serial
     private static final long serialVersionUID = 1L;
+
+    private static final Logger LOG = LoggerFactory.getLogger(DynamicCepOperator.class);
 
     private static final String LATE_ELEMENTS_DROPPED_METRIC_NAME = "numLateRecordsDropped";
     private static final String NFA_STATE_NAME = "nfaStateName";

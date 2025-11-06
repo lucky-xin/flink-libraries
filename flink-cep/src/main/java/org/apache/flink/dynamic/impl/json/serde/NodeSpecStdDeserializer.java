@@ -13,6 +13,7 @@ import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,8 +23,10 @@ import java.util.List;
  */
 public class NodeSpecStdDeserializer extends StdDeserializer<NodeSpec> {
 
-    public static final NodeSpecStdDeserializer INSTANCE = new NodeSpecStdDeserializer();
+    @Serial
     private static final long serialVersionUID = 1L;
+
+    public static final NodeSpecStdDeserializer INSTANCE = new NodeSpecStdDeserializer();
 
     public NodeSpecStdDeserializer() {
         this(NodeSpec.class);

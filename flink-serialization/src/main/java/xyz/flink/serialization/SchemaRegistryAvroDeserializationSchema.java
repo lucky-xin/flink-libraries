@@ -11,6 +11,7 @@ import org.apache.flink.formats.avro.typeutils.AvroFactory;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.io.Serial;
 
 /**
  * SchemaRegistryAvroDeserializationSchema
@@ -22,6 +23,7 @@ import java.io.IOException;
 @SuperBuilder
 public class SchemaRegistryAvroDeserializationSchema<T>
         extends AbstractSchemaRegistrySchema<T, AvroSchema> implements DeserializationSchema<T> {
+    @Serial
     private static final long serialVersionUID = -1671641202177852775L;
 
     private transient KafkaAvroDeserializer deserializer;

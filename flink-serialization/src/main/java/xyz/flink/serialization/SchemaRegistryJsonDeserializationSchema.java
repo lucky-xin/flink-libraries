@@ -7,6 +7,7 @@ import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 
 import java.io.IOException;
+import java.io.Serial;
 
 /**
  * SchemaRegistryJsonDeserializationSchema
@@ -18,6 +19,7 @@ import java.io.IOException;
 @SuperBuilder
 public class SchemaRegistryJsonDeserializationSchema<T>
         extends AbstractSchemaRegistrySchema<T, JsonSchema> implements DeserializationSchema<T> {
+    @Serial
     private static final long serialVersionUID = -1671641202177852775L;
 
     private transient KafkaJsonSchemaDeserializer<T> deserializer;

@@ -10,6 +10,7 @@ import org.apache.flink.util.WrappingRuntimeException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.Serial;
 
 /**
  * SchemaRegistryJsonSerializationSchema
@@ -21,6 +22,7 @@ import java.io.IOException;
 @SuperBuilder
 public class SchemaRegistryJsonSerializationSchema<T>
         extends AbstractSchemaRegistrySchema<T, JsonSchema> implements SerializationSchema<T> {
+    @Serial
     private static final long serialVersionUID = -1671641202177852775L;
 
     /**

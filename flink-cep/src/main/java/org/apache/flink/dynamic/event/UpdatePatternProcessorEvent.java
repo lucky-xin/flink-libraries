@@ -4,6 +4,7 @@ import org.apache.flink.dynamic.processor.PatternProcessor;
 import org.apache.flink.runtime.operators.coordination.OperatorEvent;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import java.util.List;
  */
 public class UpdatePatternProcessorEvent<T> implements OperatorEvent {
 
+    @Serial
     private static final long serialVersionUID = 1L;
     private final List<PatternProcessor<T>> patternProcessors;
 

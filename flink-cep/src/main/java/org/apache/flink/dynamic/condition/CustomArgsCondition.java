@@ -3,12 +3,15 @@ package org.apache.flink.dynamic.condition;
 import org.apache.flink.annotation.Internal;
 import org.apache.flink.cep.pattern.conditions.SimpleCondition;
 
+import java.io.Serial;
+
 /**
  * Condition that accepts custom args in json.
  */
 @Internal
 public abstract class CustomArgsCondition<T> extends SimpleCondition<T> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

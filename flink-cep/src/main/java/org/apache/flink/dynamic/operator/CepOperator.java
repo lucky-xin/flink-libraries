@@ -44,6 +44,7 @@ import org.apache.flink.util.Preconditions;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -65,14 +66,13 @@ public class CepOperator<IN, KEY, OUT>
         extends AbstractUdfStreamOperator<OUT, PatternProcessFunction<IN, OUT>>
         implements OneInputStreamOperator<IN, OUT>, Triggerable<KEY, VoidNamespace> {
 
+    @Serial
+    private static final long serialVersionUID = -4166778210774160757L;
+
     public static final String PATTERN_MATCHED_TIMES_METRIC_NAME = "patternMatchedTimes";
     public static final String PATTERN_MATCHING_AVG_TIME_METRIC_NAME = "patternMatchingAvgTime";
     public static final String LATE_ELEMENTS_DROPPED_METRIC_NAME = "numLateRecordsDropped";
-
-    private static final long serialVersionUID = -4166778210774160757L;
-
     private final boolean isProcessingTime;
-
     private final TypeSerializer<IN> inputSerializer;
 
     ///////////////			State			//////////////

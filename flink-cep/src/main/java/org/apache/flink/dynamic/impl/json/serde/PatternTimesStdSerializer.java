@@ -6,14 +6,17 @@ import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.Serialize
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 import java.io.IOException;
+import java.io.Serial;
 
 /**
  * Customized StdDeserializer of Time.
  */
 public class PatternTimesStdSerializer extends StdSerializer<Quantifier.Times> {
 
-    public static final PatternTimesStdSerializer INSTANCE = new PatternTimesStdSerializer();
+    @Serial
     private static final long serialVersionUID = 1L;
+
+    public static final PatternTimesStdSerializer INSTANCE = new PatternTimesStdSerializer();
 
     public PatternTimesStdSerializer() {
         super(Quantifier.Times.class);

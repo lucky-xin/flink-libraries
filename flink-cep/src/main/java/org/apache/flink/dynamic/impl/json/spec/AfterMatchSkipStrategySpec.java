@@ -1,5 +1,6 @@
 package org.apache.flink.dynamic.impl.json.spec;
 
+import lombok.Getter;
 import org.apache.flink.cep.nfa.aftermatch.AfterMatchSkipStrategy;
 import org.apache.flink.cep.nfa.aftermatch.NoSkipStrategy;
 import org.apache.flink.cep.nfa.aftermatch.SkipPastLastStrategy;
@@ -17,6 +18,7 @@ import java.util.Map;
  */
 public class AfterMatchSkipStrategySpec {
     private static final Map<String, String> MAP = new HashMap<>();
+    @Getter
     private final AfterMatchSkipStrategyType type;
     private final @Nullable String patternName;
 
@@ -35,10 +37,6 @@ public class AfterMatchSkipStrategySpec {
         this.patternName = patternName;
     }
 
-    public AfterMatchSkipStrategyType getType() {
-        return type;
-    }
-
     @Nullable
     public String getPatternName() {
         return patternName;
@@ -54,23 +52,17 @@ public class AfterMatchSkipStrategySpec {
     }
 
     public AfterMatchSkipStrategy toAfterMatchSkipStrategy() {
-        switch (this.type) {
-            case NO_SKIP:
-                return NoSkipStrategy.noSkip();
-            case SKIP_TO_LAST:
-                return SkipToLastStrategy.skipToLast(this.getPatternName());
-            case SKIP_TO_NEXT:
-                return SkipToNextStrategy.skipToNext();
-            case SKIP_TO_FIRST:
-                return SkipToFirstStrategy.skipToFirst(this.getPatternName());
-            case SKIP_PAST_LAST_EVENT:
-                return SkipPastLastStrategy.skipPastLastEvent();
-            default:
-                throw new IllegalStateException(
-                        "The type of the AfterMatchSkipStrategySpec: "
-                                + this.type
-                                + " is invalid!");
-        }
+        return switch (this.type) {
+            case NO_SKIP -> NoSkipStrategy.noSkip();
+            case SKIP_TO_LAST -> SkipToLastStrategy.skipToLast(this.getPatternName());
+            case SKIP_TO_NEXT -> SkipToNextStrategy.skipToNext();
+            case SKIP_TO_FIRST -> SkipToFirstStrategy.skipToFirst(this.getPatternName());
+            case SKIP_PAST_LAST_EVENT -> SkipPastLastStrategy.skipPastLastEvent();
+            default -> throw new IllegalStateException(
+                    "The type of the AfterMatchSkipStrategySpec: "
+                            + this.type
+                            + " is invalid!");
+        };
     }
 
     /**

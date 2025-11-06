@@ -7,6 +7,7 @@ import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.deser.std
 import org.apache.flink.streaming.api.windowing.time.Time;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -14,8 +15,10 @@ import java.util.concurrent.TimeUnit;
  */
 public class TimeStdDeserializer extends StdDeserializer<Time> {
 
-    public static final TimeStdDeserializer INSTANCE = new TimeStdDeserializer();
+    @Serial
     private static final long serialVersionUID = 1L;
+
+    public static final TimeStdDeserializer INSTANCE = new TimeStdDeserializer();
 
     public TimeStdDeserializer() {
         this(Time.class);

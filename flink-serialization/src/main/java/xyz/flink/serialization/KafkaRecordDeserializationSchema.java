@@ -7,6 +7,8 @@ import org.apache.flink.streaming.connectors.kafka.KafkaDeserializationSchema;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import xyz.flink.model.IKafkaRecord;
 
+import java.io.Serial;
+
 /**
  * KafkaRecordDeserializationSchema
  *
@@ -16,6 +18,7 @@ import xyz.flink.model.IKafkaRecord;
  */
 @AllArgsConstructor
 public class KafkaRecordDeserializationSchema<K, V extends IKafkaRecord> implements KafkaDeserializationSchema<V> {
+    @Serial
     private static final long serialVersionUID = 2651665280744549932L;
 
     private final DeserializationSchema<K> keyDeserializationSchema;

@@ -13,6 +13,7 @@ import xyz.avro.AvroData;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.Serial;
 
 /**
  * SchemaRegistryAdaptiveAvroSerializationSchema
@@ -24,6 +25,7 @@ import java.io.IOException;
 @SuperBuilder
 public class SchemaRegistryAdaptiveAvroSerializationSchema
         extends SchemaRegistryAvroSerializationSchema<Object> {
+    @Serial
     private static final long serialVersionUID = -1671641202177852775L;
 
     @NonNull

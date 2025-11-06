@@ -29,6 +29,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -55,6 +56,7 @@ import static io.confluent.kafka.serializers.json.KafkaJsonSchemaDeserializerCon
  */
 @SuperBuilder
 public abstract class AbstractSchemaRegistrySchema<T, S extends ParsedSchema> implements Serializable, Closeable {
+    @Serial
     private static final long serialVersionUID = -1671641202177852775L;
 
     protected static final byte MAGIC_BYTE = 0x0;
